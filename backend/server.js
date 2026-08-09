@@ -205,7 +205,7 @@ app.post('/api/tickets', async (req, res) => {
         try {
           const guild = await discordClient.guilds.fetch(DISCORD_GUILD_ID);
           if (guild) {
-            const channelName = `ticket-${username.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}-${listingId.substring(0, 10)}`;
+            const channelName = `ticket-${username.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}-${(listingId || 'account').substring(0, 10)}`;
             const createOptions = {
               name: channelName,
               type: ChannelType.GuildText

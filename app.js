@@ -1691,7 +1691,7 @@ function createTicketFlow(listing) {
     id: ticketId,
     userEmail: currentUser.email,
     username: currentUser.username,
-    listingId: listing.id,
+    listingId: listing.id || listing._id || 'unknown',
     listingTitle: listing.title,
     listingSlug: listing.slug,
     listingPrice: listing.price,
@@ -1716,7 +1716,7 @@ function createTicketFlow(listing) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       id: ticketId,
-      listingId: listing.id,
+      listingId: listing.id || listing._id || 'unknown',
       listingTitle: listing.title,
       price: listing.price,
       userEmail: currentUser.email,
