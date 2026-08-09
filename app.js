@@ -557,7 +557,7 @@ function renderAccounts(hashRoute) {
   }
 
   // Set default filter properties
-  let filterStatus = params.status || "all";
+  let filterStatus = params.status || "available";
   let filterRarity = params.rarity || "all";
   let sortOption = params.sort || "date_desc";
   let searchQuery = params.search || "";
