@@ -946,7 +946,7 @@ main {
   color: var(--color-blood);
 }
 
-/* Detail View Layout */
+/* Detail View Layout (Multi-Row Responsive Grid) */
 .detail-layout {
   display: grid;
   gap: 2rem;
@@ -955,7 +955,39 @@ main {
 
 @media (min-width: 1024px) {
   .detail-layout {
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: 1fr 340px !important;
+    grid-template-rows: auto auto !important;
+  }
+  .detail-gallery-section {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+  }
+  .detail-price-section {
+    grid-column: 2 !important;
+    grid-row: 1 / span 2 !important;
+  }
+  .detail-info-section {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    margin-top: 0.5rem !important;
+  }
+}
+
+/* Mobile optimizations for Product details page */
+@media (max-width: 1023px) {
+  .detail-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+  .detail-gallery-section {
+    order: 1 !important;
+  }
+  .detail-price-section {
+    order: 2 !important; /* Pricing card sits directly below gallery on mobile */
+  }
+  .detail-info-section {
+    order: 3 !important; /* Descriptions, Video & Specs wrap below pricing */
   }
 }
 

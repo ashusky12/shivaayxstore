@@ -865,22 +865,21 @@ function renderAccountDetails(slug) {
         <span style="color: var(--color-ink-50); text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${listing.title}</span>
       </nav>
 
-      <div class="detail-layout">
-        <!-- Main details -->
-        <div>
-          <!-- Title details -->
-          <div style="margin-bottom: 1.5rem;">
-            <div style="display: flex; gap: 0.5rem;">
-              ${rarityChip}
-            </div>
-            <h1 class="detail-title">${listing.title}</h1>
-            <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.8125rem; color: var(--color-ink-300); margin-top: 0.5rem;">
-              <span><i data-lucide="eye" style="width: 12px; height: 12px; vertical-align: middle;"></i> ${listing.views} views</span>
-              <span><i data-lucide="clock" style="width: 12px; height: 12px; vertical-align: middle;"></i> Listed recently</span>
-            </div>
-          </div>
+      <!-- Title details (Full-Width Top Header) -->
+      <div style="margin-bottom: 1.5rem;">
+        <div style="display: flex; gap: 0.5rem;">
+          ${rarityChip}
+        </div>
+        <h1 class="detail-title">${listing.title}</h1>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.8125rem; color: var(--color-ink-300); margin-top: 0.5rem;">
+          <span><i data-lucide="eye" style="width: 12px; height: 12px; vertical-align: middle;"></i> ${listing.views} views</span>
+          <span><i data-lucide="clock" style="width: 12px; height: 12px; vertical-align: middle;"></i> Listed recently</span>
+        </div>
+      </div>
 
-          <!-- Swipeable Gallery -->
+      <div class="detail-layout">
+        <!-- Item 1: Swipeable Gallery -->
+        <div class="detail-gallery-section">
           <div class="gallery-container">
             <div class="gallery-main">
               ${mainSlides}
@@ -893,17 +892,27 @@ function renderAccountDetails(slug) {
               ${thumbSlides}
             </div>
           </div>
+        </div>
 
+        <!-- Item 2: Sidebar Purchase Panel -->
+        <aside class="detail-price-section">
+          <div class="sidebar-sticky">
+            ${buyActionsHtml}
+          </div>
+        </aside>
+
+        <!-- Item 3: Info & Specifications Section -->
+        <div class="detail-info-section">
           <!-- Description Section -->
-          <section style="margin-top: 2rem;">
+          <section>
             <h2 class="detail-section-title">Overview Description</h2>
-            <p style="color: var(--color-ink-200); margin-top: 0.5rem; line-height: 1.7; font-size: 0.9375rem; white-space: pre-line;">
+            <p style="color: var(--color-ink-200); margin-top: 0.5rem; line-height: 1.6; font-size: 0.875rem; white-space: pre-line;">
               ${listing.description}
             </p>
           </section>
 
           <!-- Video Walkthrough -->
-          <section style="margin-top: 2.5rem;">
+          <section style="margin-top: 2.25rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
               <span class="process-icon" style="margin-bottom: 0; width: 2.25rem; height: 2.25rem;"><i data-lucide="circle-play"></i></span>
               <div>
@@ -921,7 +930,7 @@ function renderAccountDetails(slug) {
           </section>
 
           <!-- Specifications Table -->
-          <section style="margin-top: 2.5rem;">
+          <section style="margin-top: 2.25rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
               <span class="process-icon" style="margin-bottom: 0; width: 2.25rem; height: 2.25rem;"><i data-lucide="shield-check"></i></span>
               <div>
@@ -966,20 +975,13 @@ function renderAccountDetails(slug) {
           </section>
 
           <!-- Rare items tags list -->
-          <section style="margin-top: 2.5rem;">
+          <section style="margin-top: 2.25rem;">
             <h3 style="font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-ink-300); margin-bottom: 0.75rem;">Rare items included</h3>
             <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
               ${rareItemsHtml}
             </div>
           </section>
         </div>
-
-        <!-- Sidebar inquiry panel -->
-        <aside>
-          <div class="sidebar-sticky">
-            ${buyActionsHtml}
-          </div>
-        </aside>
       </div>
     </div>
   `;
