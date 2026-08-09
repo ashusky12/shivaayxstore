@@ -1699,7 +1699,7 @@ function createTicketFlow(listing) {
     messages: [
       {
         sender: "bot",
-        text: `Hello ${currentUser.username}! Welcome to ShivaayXStore. I've initiated this purchase thread for **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")}).\n\nWould you like to lock this account and request secure payment details?`,
+        text: `Yo ${currentUser.username}! ShivaayXStore me aapka welcome hai. Aapne **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")}) ke liye ticket open kiya hai.\n\nKya aap is ID ko lock karke payment details lena chahte hain?`,
         time: new Date().toISOString()
       }
     ],
@@ -1778,11 +1778,11 @@ function renderSingleTicket(ticketId) {
     // Stage-based action shortcuts
     let shortcutHtml = "";
     if (ticket.stage === 1) {
-      shortcutHtml = `<button type="button" class="btn btn-ghost btn-sm" id="btn-agree-buy">I agree, lock the account</button>`;
+      shortcutHtml = `<button type="button" class="btn btn-ghost btn-sm" id="btn-agree-buy">Ha bhai, ID lock karke payment details do</button>`;
     } else if (ticket.stage === 2) {
       shortcutHtml = `<button type="button" class="btn btn-primary btn-sm" id="btn-simulate-pay"><i data-lucide="credit-card"></i> Simulate Payment (UPI ₹${ticket.listingPrice.toLocaleString("en-IN")})</button>`;
     } else if (ticket.stage === 3) {
-      shortcutHtml = `<button type="button" class="btn btn-ghost btn-sm" id="btn-request-logins">Request handover details</button>`;
+      shortcutHtml = `<button type="button" class="btn btn-ghost btn-sm" id="btn-request-logins">Handover login details de do</button>`;
     }
 
     inputBarHtml = `
@@ -1995,7 +1995,7 @@ function renderSingleTicket(ticketId) {
     if (currentTicket.stage === 1) {
       if (lowercaseText.includes("yes") || lowercaseText.includes("proceed") || lowercaseText.includes("purchase") || lowercaseText.includes("lock")) {
         nextStage = 2;
-        botReply = `Excellent decision! I have successfully reserved the account for you. It is locked and marked as **Reserved** in the catalog.\n\nHere are the payment details for your purchase of **₹${currentTicket.listingPrice.toLocaleString("en-IN")}**:\n- **UPI ID**: \`ShivaayXStore@upi\`\n- **Scanner**: (UPI Code validated)\n\nOnce payment is complete, type 'PAID' or press the simulated payment button below to complete validation.`;
+        botReply = `Bhai, aapki ID reserve ho chuki hai! Catalog me isko **Reserved** mark kar diya hai.\n\n**Payment Details (₹${currentTicket.listingPrice.toLocaleString("en-IN")}):**\n- **UPI ID**: \`ShivaayXStore@upi\`\n\nPayment complete hone ke baad yaha screenshot bhej dijiye ya niche simulated payment button par click karein!`;
         systemAlert = {
           sender: "system",
           text: `Listing ${currentTicket.listingTitle} status set to RESERVED`,
@@ -2010,25 +2010,25 @@ function renderSingleTicket(ticketId) {
           saveListings(listings);
         }
       } else {
-        botReply = "I understand. If you have any questions about the badges, Evo weapons, or logins of this ID, let me know! Ready to proceed when you are.";
+        botReply = "Thik hai bhai. Agar badges, Evo guns ya kisi chiz ka doubt ho toh pooch lena. Jab ready ho toh bata dena!";
       }
     } else if (currentTicket.stage === 2) {
       if (lowercaseText.includes("paid") || lowercaseText.includes("simulating") || lowercaseText.includes("confirm")) {
         // Handled directly by simulatePaymentTrigger usually, but added fallback
         nextStage = 3;
-        botReply = "Checking transaction ledger... Payment verified successfully! The fund transfer of ₹" + currentTicket.listingPrice.toLocaleString("en-IN") + " has been logged.\n\nPress the request logins button or type 'Logins' to receive access codes.";
+        botReply = "Ledger check kar liya hai... Payment receive ho gayi hai bhai! Handover credentials ready ho rahi hain. Login details lene ke liye niche button par click karein ya 'Logins' type karein.";
         systemAlert = {
           sender: "system",
           text: "Payment of ₹" + currentTicket.listingPrice.toLocaleString("en-IN") + " confirmed successfully via UPI ledger",
           type: "success"
         };
       } else {
-        botReply = "Awaiting verification. Please transfer the balance to UPI: `ShivaayXStore@upi` and message back. We lock listings for up to 2 hours only.";
+        botReply = "Awaiting verification. Payment complete karke message kijiye. ID bas 2 ghante tak reserved rahegi.";
       }
     } else if (currentTicket.stage === 3) {
       if (lowercaseText.includes("login") || lowercaseText.includes("handover") || lowercaseText.includes("detail") || lowercaseText.includes("credential")) {
         nextStage = 4;
-        botReply = `Here are your secure handover credentials. Please secure them immediately:\n\n- **Login Email (Google Bound)**: \`ShivaayX_player_${Math.floor(1000 + Math.random() * 9000)}@gmail.com\`\n- **Password**: \`bx_pass_${Math.floor(100000 + Math.random() * 900000)}\`\n- **Linked Recovery Mail**: \`ShivaayX_backup@gmail.com\`\n\n**Security instructions**:\n1. Log in on your device.\n2. Navigate to security settings and replace the recovery number with yours.\n3. Turn on two-factor authentication.\n\nThank you for shopping at ShivaayXStore! This ticket is now closed.`;
+        botReply = `Ye lijiye aapki secure login details:\n\n- **Google Login**: \`ShivaayX_player_${Math.floor(1000 + Math.random() * 9000)}@gmail.com\`\n- **Password**: \`bx_pass_${Math.floor(100000 + Math.random() * 900000)}\`\n- **Recovery Email**: \`ShivaayX_backup@gmail.com\`\n\n**Bohut important instructions**:\n1. ID ko device me login karein.\n2. Google security settings me recovery details ko change kar lein.\n3. Two-factor authentication (2FA) ON kar lein.\n\nShivaayXStore se shopping karne ke liye thank you! Ye ticket ab close ho gayi hai.`;
         systemAlert = {
           sender: "system",
           text: "Handover credentials shared. Account status updated to SOLD.",
@@ -2045,10 +2045,10 @@ function renderSingleTicket(ticketId) {
         
         currentTicket.status = "closed";
       } else {
-        botReply = "Your account is secured. Ready to hand over credentials. Type 'logins' to request them.";
+        botReply = "Account ready hai handover ke liye. Credentials lene ke liye 'logins' type kijiye.";
       }
     } else {
-      botReply = "This transaction has been completed. If you need support with another account, please browse catalog and start a new ticket thread.";
+      botReply = "Ye deal complete ho chuki hai bhai! Agar koi doosri ID pasand aaye toh naya ticket open kar lena.";
     }
 
     // Push replies to ticket log
