@@ -1957,4 +1957,111 @@ footer.site-footer {
   background-color: rgba(255, 255, 255, 0.01);
 }
 
+/* ==========================================================================
+   ShivaayXStore Mobile UI/UX Optimizations (Deep Sweep)
+   ========================================================================== */
+
+/* Shell padding on small mobile screens */
+@media (max-width: 639px) {
+  .shell {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem !important;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+/* Hide desktop header actions on mobile to prevent overlapping */
+@media (max-width: 767px) {
+  .nav-actions {
+    display: none !important;
+  }
+}
+
+/* Specs details grid in 2 columns on mobile for compact listing */
+.specs-detail-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+/* Compact 2-column footer layout on mobile */
+@media (max-width: 767px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .footer-brand {
+    grid-column: span 2;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Responsive Modal Box padding */
+@media (max-width: 480px) {
+  .modal-box {
+    padding: 1.5rem 1.25rem !important;
+  }
+  .auth-form {
+    gap: 1rem !important;
+  }
+}
+
+/* Full-width toast notifications on phone viewports */
+@media (max-width: 480px) {
+  .toast-container {
+    left: 1rem !important;
+    right: 1rem !important;
+    bottom: 1rem !important;
+  }
+  .toast {
+    min-width: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+}
+
+/* Keep gallery zoom trigger always visible on mobile/touch screens */
+@media (max-width: 1023px) {
+  .gallery-zoom {
+    opacity: 1 !important;
+  }
+  .gallery-nav-btn {
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+  }
+}
+
+/* Responsive Detail View Title font size */
+.detail-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  margin-top: 0.75rem;
+  line-height: 1.2;
+}
+
+@media (min-width: 640px) {
+  .detail-title {
+    font-size: 2.25rem;
+  }
+}
+
+/* Full-width UPI transaction buttons in support chat on mobile */
+@media (max-width: 480px) {
+  .chat-input-bar button, 
+  .chat-input-bar a {
+    width: 100% !important;
+    margin-bottom: 0.5rem;
+  }
+  .chat-input-bar div {
+    width: 100%;
+  }
+}
+
 

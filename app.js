@@ -884,7 +884,7 @@ function renderAccountDetails(slug) {
   appRoot.innerHTML = `
     <div class="shell section-py" style="padding-top: 2rem;">
       <!-- Breadcrumbs -->
-      <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--color-ink-300); margin-bottom: 1.5rem;">
+      <nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--color-ink-300); margin-bottom: 1.5rem;">
         <a href="#/" style="color: var(--color-blood);">Home</a>
         <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
         <a href="#/accounts" style="color: var(--color-blood);">Accounts</a>
@@ -900,7 +900,7 @@ function renderAccountDetails(slug) {
             <div style="display: flex; gap: 0.5rem;">
               ${rarityChip}
             </div>
-            <h1 style="font-size: 2.25rem; margin-top: 0.75rem;">${listing.title}</h1>
+            <h1 class="detail-title">${listing.title}</h1>
             <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.8125rem; color: var(--color-ink-300); margin-top: 0.5rem;">
               <span><i data-lucide="eye" style="width: 12px; height: 12px; vertical-align: middle;"></i> ${listing.views} views</span>
               <span><i data-lucide="clock" style="width: 12px; height: 12px; vertical-align: middle;"></i> Listed recently</span>
@@ -1456,7 +1456,7 @@ function renderSingleTicket(ticketId) {
 
   appRoot.innerHTML = `
     <div class="shell section-py" style="padding-top: 2rem; max-width: 768px;">
-      <nav style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--color-ink-300); margin-bottom: 1.5rem;">
+      <nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--color-ink-300); margin-bottom: 1.5rem;">
         <a href="#/tickets" style="color: var(--color-blood);">My Tickets</a>
         <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
         <span style="color: var(--color-ink-50);">Chat Thread</span>
