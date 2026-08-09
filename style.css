@@ -1660,7 +1660,7 @@ ol.process-list {
 .floating-support-btn {
   position: fixed;
   bottom: 1.25rem;
-  left: 1.25rem;
+  right: 1.25rem;
   z-index: 1000;
   width: 52px;
   height: 52px;
@@ -1669,11 +1669,18 @@ ol.process-list {
   color: white;
   border: none;
   cursor: pointer;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: var(--shadow-neon-lg);
   transition: var(--transition-bounce);
   animation: buttonPulse 2s infinite ease-in-out;
+}
+
+.floating-support-btn svg {
+  width: 24px !important;
+  height: 24px !important;
+  display: block !important;
 }
 
 .floating-support-btn:hover {
