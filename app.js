@@ -187,7 +187,7 @@ if (!localStorage.getItem("ShivaayX_tickets")) {
 }
 
 // Current session user
-let currentUser = JSON.parse(localStorage.getItem("ShivaayX_session")) || null;
+let currentUser = { id: "guest_session", username: "Buyer", email: "buyer@shivaayxstore.in" };
 
 // --- Global UI State & Helpers ---
 const appRoot = document.getElementById("app-root");
@@ -317,54 +317,26 @@ document.getElementById("register-form").addEventListener("submit", (e) => {
   router(); // Re-render
 });
 
-// Logout Helper
-window.logoutUser = function() {
-  currentUser = null;
-  localStorage.removeItem("ShivaayX_session");
-  updateHeaderActions();
-  showToast("Logged out successfully.");
-  window.location.hash = "#/";
-};
+
 
 // Render Header actions dynamically based on auth state
 function updateHeaderActions() {
   const container = document.getElementById("nav-actions");
   const mobileContainer = document.getElementById("mobile-nav-actions");
   
-  if (currentUser) {
-    const html = `
-      <a href="#/tickets" class="btn btn-ghost">
-        <i data-lucide="ticket"></i> My Tickets
-      </a>
-      <button class="btn btn-danger btn-sm" onclick="logoutUser()">
-        <i data-lucide="log-out"></i> Logout (${currentUser.username})
-      </button>
-    `;
-    container.innerHTML = html;
-    mobileContainer.innerHTML = html;
-  } else {
-    const html = `
-      <button class="btn btn-ghost" onclick="openAuthModal('login-modal')">
-        Sign In
-      </button>
-      <button class="btn btn-primary" onclick="openAuthModal('register-modal')">
-        Register
-      </button>
-    `;
-    container.innerHTML = html;
-    mobileContainer.innerHTML = html;
-  }
+  const html = `
+    <a href="#/tickets" class="btn btn-ghost">
+      <i data-lucide="ticket"></i> My Tickets
+    </a>
+  `;
+  container.innerHTML = html;
+  mobileContainer.innerHTML = html;
   lucide.createIcons();
 }
 
 // Handle Floating Headset Click
 document.getElementById("floating-support").addEventListener("click", () => {
-  if (!currentUser) {
-    showToast("Please register or log in to access live support chat.", "error");
-    openAuthModal("login-modal");
-  } else {
-    window.location.hash = "#/tickets";
-  }
+  window.location.hash = "#/tickets";
 });
 
 
