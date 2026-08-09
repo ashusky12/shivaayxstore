@@ -2821,45 +2821,105 @@ footer.site-footer {
 
 @media (max-width: 1023px) {
   .advanced-filters-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
 @media (max-width: 639px) {
   .advanced-filter-bar-container {
-    padding: 0.875rem !important;
+    padding: 0.75rem !important;
   }
   
   .filter-header-row {
     flex-direction: column !important;
     align-items: stretch !important;
+    gap: 0.625rem !important;
   }
   
   .search-box-wrapper {
     min-width: 0 !important;
+    width: 100% !important;
   }
   
   .filter-header-actions-right {
     display: grid !important;
     grid-template-columns: 1fr auto !important;
+    gap: 0.5rem !important;
   }
   
   .custom-sort-select {
     width: 100% !important;
+    height: 38px !important;
+    font-size: 0.8125rem !important;
+    background-position: right 0.5rem center !important;
+  }
+  
+  .filter-toggle-btn {
+    height: 38px !important;
+    font-size: 0.8125rem !important;
+    padding-inline: 1rem !important;
+  }
+  
+  .rarity-pills-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    gap: 0.5rem !important;
+    margin-top: 0.75rem !important;
+    padding-top: 0.75rem !important;
+  }
+  
+  .rarity-pills-list {
+    flex: 1 !important;
+    display: flex !important;
+    gap: 0.375rem !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+  }
+  
+  .rarity-pill-btn {
+    padding: 0.25rem 0.75rem !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .catalog-count-pill {
+    flex-shrink: 0 !important;
+    font-size: 0.75rem !important;
+    color: var(--color-ink-400) !important;
+    white-space: nowrap !important;
+  }
+
+  .advanced-filters-panel {
+    padding: 1rem !important;
+    margin-top: 0.75rem !important;
+  }
+  
+  .advanced-filters-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  /* Reset button spans both columns on mobile to look balanced */
+  .advanced-filters-grid .filter-group:last-child {
+    grid-column: span 2 !important;
+  }
+  
+  .rare-filter-chip {
+    padding: 0.25rem 0.625rem !important;
+    font-size: 0.6875rem !important;
   }
 }
 
 @media (max-width: 480px) {
   .advanced-filters-grid {
+    /* For very narrow screens, stack inputs to avoid squishing labels */
     grid-template-columns: 1fr !important;
   }
-  .rarity-pills-row {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 0.75rem !important;
-  }
-  .catalog-count-pill {
-    align-self: flex-end;
+  .advanced-filters-grid .filter-group:last-child {
+    grid-column: span 1 !important;
   }
 }
 
