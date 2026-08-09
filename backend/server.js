@@ -119,7 +119,7 @@ const Ticket = mongoose.model('Ticket', TicketSchema);
 const TicketMessage = mongoose.model('TicketMessage', TicketMessageSchema);
 
 // --- DISCORD CLIENT INTEGRATION ---
-const { Client, GatewayIntentBits, ChannelType } = require('discord.js');
+const { Client, GatewayIntentBits, ChannelType, PermissionFlagsBits } = require('discord.js');
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const DISCORD_GUILD_ID = process.env.DISCORD_GUILD_ID;
@@ -208,7 +208,17 @@ app.post('/api/tickets', async (req, res) => {
             const channelName = `ticket-${username.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}-${(listingId || 'account').substring(0, 10)}`;
             const createOptions = {
               name: channelName,
-              type: ChannelType.GuildText
+              type: ChannelType.GuildText,
+              permissionOverwrites: [
+                {
+                  id: guild.roles.everyone.id,
+                  deny: [PermissionFlagsBits.ViewChannel]
+                },
+                {
+                  id: discordClient.user.id,
+                  allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages]
+                }
+              ]
             };
             if (DISCORD_CATEGORY_ID) {
               createOptions.parent = DISCORD_CATEGORY_ID;
