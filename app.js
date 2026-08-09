@@ -196,6 +196,14 @@ localStorage.setItem("ShivaayX_tickets", JSON.stringify([]));
 // Current session user
 let currentUser = { id: "guest_session", username: "Buyer", email: "buyer@shivaayxstore.in" };
 
+// Hide Crisp widget on page load, only show it when triggered by our custom buttons
+if (typeof $crisp !== 'undefined') {
+  $crisp.push(["do", "chat:hide"]);
+  $crisp.push(["on", "chat:closed", () => {
+    $crisp.push(["do", "chat:hide"]);
+  }]);
+}
+
 // --- Global UI State & Helpers ---
 const appRoot = document.getElementById("app-root");
 const siteHeader = document.getElementById("site-header");
@@ -332,14 +340,42 @@ function updateHeaderActions() {
   const mobileContainer = document.getElementById("mobile-nav-actions");
   
   const html = `
-    <button class="btn btn-ghost" onclick="$crisp.push(['do', 'chat:open'])">
+    <button class="btn btn-ghost" id="btn-header-support">
       <i data-lucide="message-square"></i> Live Support
     </button>
   `;
   container.innerHTML = html;
   mobileContainer.innerHTML = html;
   lucide.createIcons();
+
+  const headerSupportBtn = document.getElementById("btn-header-support");
+  if (headerSupportBtn) {
+    headerSupportBtn.addEventListener("click", () => {
+      triggerGeneralSupportConfirm();
+    });
+  }
 }
+
+// Handle Floating Headset Click
+document.getElementById("floating-support").addEventListener("click", () => {
+  triggerGeneralSupportConfirm();
+});
+
+function triggerGeneralSupportConfirm() {
+  const generalListing = {
+    id: "general-support",
+    _id: "general-support",
+    title: "General Support",
+    slug: "general-support",
+    price: 0
+  };
+  promptTicketConfirmation(generalListing);
+}
+
+window.closeTicketConfirmModal = function() {
+  const modal = document.getElementById("ticket-confirm-modal");
+  if (modal) modal.classList.remove("open");
+};
 
 
 
@@ -362,6 +398,13 @@ const routes = {
 
 function router() {
   const hash = window.location.hash || "#/";
+  
+  // Hide/Show floating support chat bubble on Product Details views
+  const floatingSupport = document.getElementById("floating-support");
+  if (floatingSupport) {
+    const isDetailsPage = hash.startsWith("#/accounts/") && !hash.replace("#/accounts/", "").startsWith("?");
+    floatingSupport.style.display = isDetailsPage ? "none" : "flex";
+  }
   
 
   
@@ -2440,14 +2483,36 @@ window.closeTicketConfirmModal = function() {
 };
 
 function promptTicketConfirmation(listing) {
-  if (typeof $crisp !== 'undefined') {
-    // Open Crisp chat box
-    $crisp.push(["do", "chat:open"]);
+  const modal = document.getElementById("ticket-confirm-modal");
+  if (modal) {
+    modal.classList.add("open");
+    lucide.createIcons();
     
-    // Auto-send product inquiry message to admin
-    const msgText = `Yo ShivaayXStore! I want to inquire about account listing: **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")} • Level: ${listing.level || 'N/A'}). Please share payment details.`;
-    $crisp.push(["do", "message:send", ["text", msgText]]);
+    const confirmBtn = document.getElementById("confirm-ticket-btn");
+    if (confirmBtn) {
+      confirmBtn.onclick = () => {
+        modal.classList.remove("open");
+        
+        if (typeof $crisp !== 'undefined') {
+          // Unhide, open and focus the Crisp chat widget
+          $crisp.push(["do", "chat:show"]);
+          $crisp.push(["do", "chat:open"]);
+          
+          // Send pre-filled message if it's a specific product inquiry (not general-support)
+          if (listing.id !== 'general-support') {
+            const msgText = `Yo ShivaayXStore! I want to inquire about account listing: **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")} • Level: ${listing.level || 'N/A'}). Please share payment details.`;
+            $crisp.push(["do", "message:send", ["text", msgText]]);
+          }
+        } else {
+          showToast("Live Support Widget loading. Please try again...", "info");
+        }
+      };
+    }
   } else {
-    showToast("Live Support loading. Please click again in a moment...", "info");
+    // Failsafe: if our custom modal is not present, open Crisp directly
+    if (typeof $crisp !== 'undefined') {
+      $crisp.push(["do", "chat:show"]);
+      $crisp.push(["do", "chat:open"]);
+    }
   }
 }
