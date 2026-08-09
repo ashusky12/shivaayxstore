@@ -201,7 +201,7 @@ app.post('/api/tickets', async (req, res) => {
       await ticket.save();
       
       // If Discord Client is active, create channel in Guild!
-      if (discordClient && discordClient.readyAt) {
+      if (discordClient && discordClient.isReady()) {
         try {
           const guild = await discordClient.guilds.fetch(DISCORD_GUILD_ID);
           if (guild) {
