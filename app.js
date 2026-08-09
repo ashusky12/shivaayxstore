@@ -415,6 +415,8 @@ function router() {
     } else {
       routes["accounts/:slug"](slug);
     }
+  } else if (hash.startsWith("#/tickets/")) {
+    routes.tickets(hash);
   } else {
     const cleanHash = hash.replace("#/", "").split("?")[0];
     if (routes[cleanHash]) {
@@ -1621,7 +1623,7 @@ function renderTickets() {
   }
 
   // Renders Ticket List
-  const tickets = JSON.parse(localStorage.getItem("ShivaayX_tickets")).filter(t => t.userEmail === currentUser.email);
+  const tickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]").filter(t => t.userEmail === currentUser.email);
 
   let ticketListHtml = "";
   if (tickets.length === 0) {
@@ -1673,7 +1675,7 @@ function renderTickets() {
 
 // 8. TICKET CREATION LOGIC
 function createTicketFlow(listing) {
-  const tickets = JSON.parse(localStorage.getItem("ShivaayX_tickets"));
+  const tickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
   
   // Check if ticket already exists for this listing and current user
   const existing = tickets.find(t => t.userEmail === currentUser.email && t.listingId === listing.id);
@@ -1728,7 +1730,7 @@ function createTicketFlow(listing) {
 
 // 9. SINGLE SUPPORT TICKET CHAT SCREEN
 function renderSingleTicket(ticketId) {
-  const tickets = JSON.parse(localStorage.getItem("ShivaayX_tickets"));
+  const tickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
   const ticket = tickets.find(t => t.id === ticketId && t.userEmail === currentUser.email);
 
   if (!ticket) {
@@ -1849,7 +1851,7 @@ function renderSingleTicket(ticketId) {
       if (res.ok) {
         const data = await res.json();
         if (data.success && data.messages) {
-          const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets"));
+          const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
           const currentTicket = freshTickets.find(t => t.id === ticketId);
           if (!currentTicket) return;
 
@@ -1952,7 +1954,7 @@ function renderSingleTicket(ticketId) {
 
   // Send message helper
   function sendUserMessage(text) {
-    const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets"));
+    const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
     const currentTicket = freshTickets.find(t => t.id === ticketId);
     
     currentTicket.messages.push({
@@ -1982,7 +1984,7 @@ function renderSingleTicket(ticketId) {
 
   // Simulated Chatbot Support Team logic
   function simulateBotReply(userText) {
-    const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets"));
+    const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
     const currentTicket = freshTickets.find(t => t.id === ticketId);
     
     let botReply = "";
@@ -2074,7 +2076,7 @@ function renderSingleTicket(ticketId) {
   // Simulate payment button shortcut logic
   function simulatePaymentTrigger() {
     setTimeout(() => {
-      const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets"));
+      const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
       const currentTicket = freshTickets.find(t => t.id === ticketId);
       
       currentTicket.messages.push({
