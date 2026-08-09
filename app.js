@@ -659,9 +659,8 @@ function renderAccounts(hashRoute) {
           </div>
           <span class="catalog-count-pill" id="catalog-count-pill">0 accounts</span>
         </div>
-
         <!-- Collapsible Filters Drawer Panel -->
-        <div class="advanced-filters-panel" id="advanced-filters-panel" style="display: none;">
+        <div class="advanced-filters-panel" id="advanced-filters-panel">
           <div class="advanced-filters-grid">
             <!-- Min Price -->
             <div class="filter-group">
@@ -931,9 +930,8 @@ function renderAccounts(hashRoute) {
   const filtersToggleBtn = document.getElementById("filters-toggle-btn");
   const advancedPanel = document.getElementById("advanced-filters-panel");
   filtersToggleBtn.addEventListener("click", () => {
-    const isHidden = advancedPanel.style.display === "none";
-    advancedPanel.style.display = isHidden ? "block" : "none";
-    filtersToggleBtn.classList.toggle("active", isHidden);
+    advancedPanel.classList.toggle("open");
+    filtersToggleBtn.classList.toggle("active");
   });
 
   // Bind Rarity horizontal pills buttons
