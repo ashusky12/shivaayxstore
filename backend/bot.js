@@ -208,12 +208,13 @@ bot.onText(/\/start/, (msg) => {
     try {
       const cleanUrl = settings.webapp_url.split('?')[0];
       const mainWebsiteUrl = cleanUrl.replace('/tgapp.html', '') || 'https://shivaayxstore-1mkjdrpjg-immadhukarsarkar-5758s-projects.vercel.app/';
+      const adminUrl = `${mainWebsiteUrl}/#/admin`;
       bot.setChatMenuButton({
         chat_id: chatId,
         menu_button: {
           type: 'web_app',
           text: 'VISIT',
-          web_app: { url: mainWebsiteUrl }
+          web_app: { url: adminUrl }
         }
       });
     } catch(e) {
