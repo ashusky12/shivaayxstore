@@ -2047,12 +2047,7 @@ footer.site-footer {
   }
 }
 
-/* Specs details grid in 2 columns on mobile for compact listing */
-.specs-detail-grid {
-  display: grid;
-  gap: 0.75rem;
-  grid-template-columns: repeat(2, 1fr) !important;
-}
+
 
 /* Compact 2-column footer layout on mobile */
 @media (max-width: 767px) {
