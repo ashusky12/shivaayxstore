@@ -1827,7 +1827,12 @@ function renderSingleTicket(ticketId) {
             <h2 style="font-size: 1.125rem;">Purchase: ${ticket.listingTitle}</h2>
             <span class="chat-status">Status: active</span>
           </div>
-          <a href="#/accounts/${ticket.listingSlug}" class="btn btn-ghost btn-sm">View Listing</a>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <a href="#/accounts/${ticket.listingSlug}" class="btn btn-ghost btn-sm">View Listing</a>
+            <button class="btn btn-ghost btn-sm" id="btn-delete-this-ticket" style="color: var(--color-blood);" title="Delete support ticket">
+              <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
         </div>
 
         <!-- Direct Contact Links -->
@@ -1864,6 +1869,34 @@ function renderSingleTicket(ticketId) {
     clearInterval(window.ShivaayX_chatPollInterval);
   }
 
+  // Delete current ticket click listener
+  const deleteThisBtn = document.getElementById("btn-delete-this-ticket");
+  if (deleteThisBtn) {
+    deleteThisBtn.addEventListener("click", async () => {
+      if (confirm("Kya aap sach me is support ticket ko delete karna chahte hain? (Isse Discord channel bhi delete ho jayega)")) {
+        // Clear polling
+        if (window.ShivaayX_chatPollInterval) {
+          clearInterval(window.ShivaayX_chatPollInterval);
+        }
+        
+        // Delete locally
+        const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
+        const filtered = freshTickets.filter(t => t.id !== ticketId);
+        localStorage.setItem("ShivaayX_tickets", JSON.stringify(filtered));
+        
+        // Delete from backend server
+        try {
+          await fetch(`${getApiUrl()}/api/tickets/${ticketId}`, { method: 'DELETE' });
+        } catch (err) {
+          console.error(err);
+        }
+        
+        showToast("Ticket deleted successfully.");
+        window.location.hash = "#/tickets";
+      }
+    });
+  }
+
   // Poll backend database for Discord Admin messages every 3 seconds
   window.ShivaayX_chatPollInterval = setInterval(async () => {
     // If user navigated away, clear polling
@@ -1874,6 +1907,19 @@ function renderSingleTicket(ticketId) {
 
     try {
       const res = await fetch(`${getApiUrl()}/api/tickets/${ticketId}/messages`);
+      if (res.status === 404) {
+        // Ticket was deleted from server (likely because admin deleted the Discord channel)
+        clearInterval(window.ShivaayX_chatPollInterval);
+        
+        // Remove ticket locally
+        const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
+        const filtered = freshTickets.filter(t => t.id !== ticketId);
+        localStorage.setItem("ShivaayX_tickets", JSON.stringify(filtered));
+        
+        showToast("Support ticket has been closed and deleted by administrator.");
+        window.location.hash = "#/tickets";
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
         if (data.success && data.messages) {

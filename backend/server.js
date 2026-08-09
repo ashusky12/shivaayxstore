@@ -140,6 +140,24 @@ if (DISCORD_BOT_TOKEN && DISCORD_GUILD_ID) {
     console.log(`Discord Support Bot logged in as ${discordClient.user.tag}`);
   });
 
+  // Listen to channel deletion (to delete ticket from MongoDB)
+  discordClient.on('channelDelete', async (channel) => {
+    try {
+      const Ticket = mongoose.model('Ticket');
+      const TicketMessage = mongoose.model('TicketMessage');
+      
+      // Find ticket with this channel ID
+      const ticket = await Ticket.findOne({ discordChannelId: channel.id });
+      if (ticket) {
+        console.log(`Discord channel ${channel.name} was deleted. Purging ticket ${ticket.id} from database.`);
+        await Ticket.deleteOne({ id: ticket.id });
+        await TicketMessage.deleteMany({ ticketId: ticket.id });
+      }
+    } catch (err) {
+      console.error('Error handling channelDelete event:', err);
+    }
+  });
+
   discordClient.on('messageCreate', async (message) => {
     // Ignore bot messages
     if (message.author.bot) return;
@@ -248,6 +266,35 @@ app.delete('/api/tickets/all', async (req, res) => {
     await Ticket.deleteMany({});
     await TicketMessage.deleteMany({});
     res.json({ success: true, message: 'All tickets and messages deleted successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 6. Delete a single ticket (initiated from website)
+app.delete('/api/tickets/:id', async (req, res) => {
+  try {
+    const ticketId = req.params.id;
+    const ticket = await Ticket.findOne({ id: ticketId });
+    if (ticket) {
+      // If there's an associated Discord channel, delete it
+      if (ticket.discordChannelId && discordClient && discordClient.isReady()) {
+        try {
+          const channel = await discordClient.channels.fetch(ticket.discordChannelId);
+          if (channel) {
+            await channel.delete('Ticket deleted from website');
+          }
+        } catch (discordErr) {
+          console.error('Failed to delete Discord channel:', discordErr);
+        }
+      }
+      
+      await Ticket.deleteOne({ id: ticketId });
+      await TicketMessage.deleteMany({ ticketId: ticketId });
+      res.json({ success: true, message: 'Ticket deleted successfully.' });
+    } else {
+      res.status(404).json({ success: false, error: 'Ticket not found' });
+    }
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
