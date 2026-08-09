@@ -373,7 +373,8 @@ function router() {
   let restoreScroll = false;
   const lastActiveListingId = sessionStorage.getItem("ShivaayX_lastActiveListingId");
   
-  if ((hash === "#/" || hash.startsWith("#/accounts")) && lastActiveListingId) {
+  const isCatalogPage = hash === "#/" || hash === "#/accounts" || hash.startsWith("#/accounts?");
+  if (isCatalogPage && lastActiveListingId) {
     restoreScroll = true;
   } else {
     window.scrollTo(0, 0);
