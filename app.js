@@ -1731,10 +1731,16 @@ function createTicketFlow(listing) {
       userEmail: currentUser.email,
       username: currentUser.username
     })
-  }).catch(err => console.error("Discord Sync Error:", err));
-  
-  showToast("Support ticket created successfully.");
-  window.location.hash = `#/tickets/${ticketId}`;
+  })
+  .then(() => {
+    showToast("Support ticket created successfully.");
+    window.location.hash = `#/tickets/${ticketId}`;
+  })
+  .catch(err => {
+    console.error("Discord Sync Error:", err);
+    showToast("Support ticket created successfully.");
+    window.location.hash = `#/tickets/${ticketId}`;
+  });
 }
 
 // 9. SINGLE SUPPORT TICKET CHAT SCREEN
