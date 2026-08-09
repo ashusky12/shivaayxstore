@@ -2933,3 +2933,12 @@ footer.site-footer {
 
 
 
+
+
+/* Crisp Widget UI Hide Overrides */
+.crisp-client, #crisp-client, [class*="crisp-"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}

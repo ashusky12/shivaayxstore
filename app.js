@@ -196,11 +196,49 @@ localStorage.setItem("ShivaayX_tickets", JSON.stringify([]));
 // Current session user
 let currentUser = { id: "guest_session", username: "Buyer", email: "buyer@shivaayxstore.in" };
 
-// Hide Crisp widget on page load, only show it when triggered by our custom buttons
+// Hide Crisp widget on page load, and sync Crisp incoming messages to MongoDB
 if (typeof $crisp !== 'undefined') {
   $crisp.push(["do", "chat:hide"]);
   $crisp.push(["on", "chat:closed", () => {
     $crisp.push(["do", "chat:hide"]);
+  }]);
+
+  // Global listener for replies sent by the admin from Crisp App
+  $crisp.push(["on", "message:received", (message) => {
+    if (message && message.content) {
+      const hash = window.location.hash;
+      if (hash.startsWith("#/tickets/")) {
+        const ticketId = hash.split("/")[2];
+        const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
+        const currentTicket = freshTickets.find(t => t.id === ticketId);
+        if (currentTicket) {
+          const text = message.content;
+          const time = new Date().toISOString();
+          
+          // Check for duplicate messages
+          const exists = currentTicket.messages.some(m => m.text === text && m.sender === 'bot');
+          if (!exists) {
+            currentTicket.messages.push({
+              sender: 'bot', // Appends as received bubble
+              text: text,
+              time: time
+            });
+            localStorage.setItem("ShivaayX_tickets", JSON.stringify(freshTickets));
+            renderSingleTicket(ticketId); // Refresh custom chatbox screen
+            
+            // POST Crisp reply to central MongoDB so it is permanently synced
+            fetch(`${getApiUrl()}/api/tickets/${ticketId}/messages`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                sender: 'admin',
+                text: text
+              })
+            }).catch(err => console.error("Error saving Crisp reply to DB:", err));
+          }
+        }
+      }
+    }
   }]);
 }
 
@@ -1745,6 +1783,14 @@ function createTicketFlow(listing) {
   tickets.push(newTicket);
   localStorage.setItem("ShivaayX_tickets", JSON.stringify(tickets));
   
+  // Sync with Crisp Session
+  if (typeof $crisp !== 'undefined') {
+    $crisp.push(["set", "user:email", [currentUser.email]]);
+    $crisp.push(["set", "user:nickname", [currentUser.username]]);
+    const contextMsg = `🔄 Buyer opened a support ticket for account: **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")} • Slug: ${listing.slug || 'general-support'}).`;
+    $crisp.push(["do", "message:send", ["text", contextMsg]]);
+  }
+
   // POST to central DB (triggers Discord Bot ticket channel creation)
   fetch(`${getApiUrl()}/api/tickets`, {
     method: 'POST',
@@ -2005,6 +2051,11 @@ function renderSingleTicket(ticketId) {
     localStorage.setItem("ShivaayX_tickets", JSON.stringify(freshTickets));
     renderSingleTicket(ticketId); // Re-render chat
     
+    // Send message to Crisp backend
+    if (typeof $crisp !== 'undefined') {
+      $crisp.push(["do", "message:send", ["text", text]]);
+    }
+
     // POST to backend (forwards message to Discord channel)
     fetch(`${getApiUrl()}/api/tickets/${ticketId}/messages`, {
       method: 'POST',
