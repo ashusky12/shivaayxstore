@@ -232,6 +232,17 @@ app.post('/api/tickets', async (req, res) => {
   }
 });
 
+// 5. Purge all tickets (for testing/cleanup)
+app.delete('/api/tickets/all', async (req, res) => {
+  try {
+    await Ticket.deleteMany({});
+    await TicketMessage.deleteMany({});
+    res.json({ success: true, message: 'All tickets and messages deleted successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // 4. Send a new message inside a ticket (and forward to Discord)
 app.post('/api/tickets/:id/messages', async (req, res) => {
   try {

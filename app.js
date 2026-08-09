@@ -1665,13 +1665,34 @@ function renderTickets() {
           <p class="eyebrow">Dashboard</p>
           <h1 style="font-size: 2rem; margin-top: 0.25rem;">My Support Tickets</h1>
         </div>
-        <a href="#/accounts" class="btn btn-ghost btn-sm"><i data-lucide="plus"></i> New Ticket</a>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <button class="btn btn-ghost btn-sm" id="btn-reset-all-tickets" style="color: var(--color-blood); border: 1px dashed rgba(255, 45, 70, 0.3);">
+            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Reset All
+          </button>
+          <a href="#/accounts" class="btn btn-ghost btn-sm"><i data-lucide="plus"></i> New Ticket</a>
+        </div>
       </header>
 
       ${ticketListHtml}
     </div>
   `;
   lucide.createIcons();
+
+  const resetBtn = document.getElementById("btn-reset-all-tickets");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", async () => {
+      if (confirm("Kya aap sach me saare purane tickets aur channels delete karna chahte hain?")) {
+        localStorage.setItem("ShivaayX_tickets", JSON.stringify([]));
+        try {
+          await fetch(`${getApiUrl()}/api/tickets/all`, { method: 'DELETE' });
+        } catch (err) {
+          console.error(err);
+        }
+        showToast("Saare tickets successfully clear ho gaye hain.");
+        router();
+      }
+    });
+  }
 }
 
 // 8. TICKET CREATION LOGIC
