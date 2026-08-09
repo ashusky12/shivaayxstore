@@ -190,10 +190,8 @@ syncListingsWithServer();
 if (!localStorage.getItem("ShivaayX_users")) {
   localStorage.setItem("ShivaayX_users", JSON.stringify([]));
 }
-// Initialise tickets database if not exists (preserved across reloads)
-if (!localStorage.getItem("ShivaayX_tickets")) {
-  localStorage.setItem("ShivaayX_tickets", JSON.stringify([]));
-}
+// Force clear tickets for cleanup
+localStorage.setItem("ShivaayX_tickets", JSON.stringify([]));
 
 // Current session user
 let currentUser = { id: "guest_session", username: "Buyer", email: "buyer@shivaayxstore.in" };
