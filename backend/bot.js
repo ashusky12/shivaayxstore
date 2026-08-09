@@ -204,15 +204,21 @@ bot.onText(/\/start/, (msg) => {
     settings = getYoutubeCredentials();
   } catch(e) {}
 
-  try {
-    bot.setChatMenuButton({
-      chat_id: chatId,
-      menu_button: {
-        type: 'default'
-      }
-    });
-  } catch(e) {
-    console.error("Failed to reset chat menu button:", e.message);
+  if (settings.webapp_url) {
+    try {
+      const cleanUrl = settings.webapp_url.split('?')[0];
+      const cacheBustedUrl = `${cleanUrl}?v=${Date.now()}`;
+      bot.setChatMenuButton({
+        chat_id: chatId,
+        menu_button: {
+          type: 'web_app',
+          text: 'START',
+          web_app: { url: cacheBustedUrl }
+        }
+      });
+    } catch(e) {
+      console.error("Failed to set chat menu button:", e.message);
+    }
   }
   
   const text = `🔴 <b>SHIVAAYXSTORE ADMIN</b> 🔴\n━━━━━━━━━━━━━━━\nSelect option below:`;
