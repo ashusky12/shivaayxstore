@@ -204,19 +204,15 @@ bot.onText(/\/start/, (msg) => {
     settings = getYoutubeCredentials();
   } catch(e) {}
 
-  if (settings.webapp_url) {
-    try {
-      bot.setChatMenuButton({
-        chat_id: chatId,
-        menu_button: {
-          type: 'web_app',
-          text: 'START',
-          web_app: { url: settings.webapp_url }
-        }
-      });
-    } catch(e) {
-      console.error("Failed to set chat menu button:", e.message);
-    }
+  try {
+    bot.setChatMenuButton({
+      chat_id: chatId,
+      menu_button: {
+        type: 'default'
+      }
+    });
+  } catch(e) {
+    console.error("Failed to reset chat menu button:", e.message);
   }
   
   const text = `🔴 <b>SHIVAAYXSTORE ADMIN</b> 🔴\n━━━━━━━━━━━━━━━\nSelect option below:`;
