@@ -846,18 +846,36 @@ function renderAccountDetails(slug) {
     `;
   });
 
-  // Filter other available listings of similar tier/rarity
-  const similarListings = listings.filter(l => l.id !== listing.id && l.status === "available");
+  // Track viewed listings in localStorage
+  let viewedListings = JSON.parse(localStorage.getItem("ShivaayX_viewedListings") || "[]");
+  // Add current listing to viewed if not already there, and move it to the front
+  viewedListings = viewedListings.filter(id => id !== listing.id);
+  viewedListings.unshift(listing.id);
+  // Limit to 8 items
+  viewedListings = viewedListings.slice(0, 8);
+  localStorage.setItem("ShivaayX_viewedListings", JSON.stringify(viewedListings));
+
+  // Filter other available listings
+  const availableListings = listings.filter(l => l.id !== listing.id && l.status === "available");
   
-  // Sort them so that listings with the same rarity rank higher
-  similarListings.sort((a, b) => {
+  // Sort listings: show recently viewed ones first!
+  const recentlyViewedIds = viewedListings.filter(id => id !== listing.id);
+  
+  // Group 1: Available listings that have been viewed recently
+  const recentlyViewedListings = availableListings.filter(l => recentlyViewedIds.includes(l.id));
+  // Sort Group 1 by their order in recentlyViewedIds (most recent first!)
+  recentlyViewedListings.sort((a, b) => recentlyViewedIds.indexOf(a.id) - recentlyViewedIds.indexOf(b.id));
+
+  // Group 2: Other available listings (not viewed recently) sorted by rarity similarity
+  const otherListings = availableListings.filter(l => !recentlyViewedIds.includes(l.id));
+  otherListings.sort((a, b) => {
     if (a.rarity === listing.rarity && b.rarity !== listing.rarity) return -1;
     if (b.rarity === listing.rarity && a.rarity !== listing.rarity) return 1;
     return 0;
   });
-  
-  // Take top 3 listings
-  const recommendedListings = similarListings.slice(0, 3);
+
+  // Combine both groups (recently viewed first, then others) up to 6 items to make the slider rich
+  const recommendedListings = [...recentlyViewedListings, ...otherListings].slice(0, 6);
   
   let similarListingsHtml = "";
   recommendedListings.forEach(l => {
@@ -1048,7 +1066,7 @@ function renderAccountDetails(slug) {
               View All <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
             </a>
           </div>
-          <div class="listings-grid">
+          <div class="horizontal-listings-slider">
             ${similarListingsHtml}
           </div>
         </div>

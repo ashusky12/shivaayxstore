@@ -722,7 +722,7 @@ main {
   gap: 1rem;
   margin-top: auto;
   padding-top: 1rem;
-  border-top: 1px solid var(--color-surface-line);
+  border-t: 1px solid var(--color-surface-line);
 }
 
 .card-price {
@@ -2564,7 +2564,41 @@ footer.site-footer {
   transform: scale(1.15) rotate(15deg);
 }
 
+/* Horizontal Slider Carousel for Recently Viewed / Similar Products */
+.horizontal-listings-slider {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  gap: 1.25rem !important;
+  padding: 0.5rem 0.25rem 1.5rem 0.25rem !important;
+  scrollbar-width: none !important; /* Hide scrollbar Firefox */
+  -ms-overflow-style: none !important;  /* Hide scrollbar IE/Edge */
+  scroll-behavior: smooth !important;
+}
 
+.horizontal-listings-slider::-webkit-scrollbar {
+  display: none !important; /* Hide scrollbar Chrome/Safari */
+}
+
+.horizontal-listings-slider .listing-card {
+  flex: 0 0 280px !important;
+  max-width: 280px !important;
+  width: 280px !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 639px) {
+  .horizontal-listings-slider {
+    gap: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+  .horizontal-listings-slider .listing-card {
+    flex: 0 0 260px !important;
+    max-width: 260px !important;
+    width: 260px !important;
+  }
+}
 
 
 
