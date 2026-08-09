@@ -1,0 +1,12 @@
+node_modules/
+backend/node_modules/
+dist/
+.env
+backend/.env
+.vercel/
+*.mp4
+temp_*.mp4
+backend/temp_*.mp4
+.DS_Store
+.system_generated/
+.gemini/

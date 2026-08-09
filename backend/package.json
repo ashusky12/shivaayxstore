@@ -1,0 +1,22 @@
+{
+  "name": "shivaayxstore-backend",
+  "version": "1.0.0",
+  "description": "Backend API Server and Telegram Bot integration for ShivaayXStore",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "bot": "node bot.js"
+  },
+  "dependencies": {
+    "cloudinary": "^1.37.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.4",
+    "express": "^4.18.2",
+    "mongoose": "^7.2.1",
+    "axios": "^1.4.0",
+    "node-telegram-bot-api": "latest",
+    "better-sqlite3": "^8.4.0",
+    "googleapis": "^118.0.0",
+    "@google/generative-ai": "^0.11.0"
+  }
+}
