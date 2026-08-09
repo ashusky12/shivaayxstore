@@ -2534,6 +2534,51 @@ window.closeTicketConfirmModal = function() {
 };
 
 function promptTicketConfirmation(listing) {
+  const tickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
+  
+  // Find if user already has ANY active support chat thread
+  const activeTicket = tickets.find(t => t.userEmail === currentUser.email && t.status === "active");
+  
+  if (activeTicket) {
+    // If it's a product page inquiry (not general-support click), log the new product context
+    if (listing.id !== "general-support") {
+      const updateText = `Inquiring about: ${listing.title} (Price: ₹${listing.price.toLocaleString("en-IN")})`;
+      const discordText = `🔄 Inquiring about listing: **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")})`;
+      
+      // Ensure we don't log duplicate consecutive product changes
+      const lastMsg = activeTicket.messages[activeTicket.messages.length - 1];
+      if (!lastMsg || lastMsg.text !== updateText) {
+        activeTicket.messages.push({
+          sender: "system",
+          text: updateText,
+          time: new Date().toISOString(),
+          type: "success"
+        });
+        localStorage.setItem("ShivaayX_tickets", JSON.stringify(tickets));
+        
+        // Sync with Crisp Session
+        if (typeof $crisp !== 'undefined') {
+          $crisp.push(["do", "message:send", ["text", discordText]]);
+        }
+        
+        // POST system notification to database & forward to Discord channel
+        fetch(`${getApiUrl()}/api/tickets/${activeTicket.id}/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sender: 'buyer',
+            text: discordText
+          })
+        }).catch(err => console.error(err));
+      }
+    }
+    
+    showToast("Opening your active support chat.");
+    window.location.hash = `#/tickets/${activeTicket.id}`;
+    return;
+  }
+
+  // Open confirmation modal if no active chat thread exists
   const modal = document.getElementById("ticket-confirm-modal");
   if (modal) {
     modal.classList.add("open");
@@ -2543,27 +2588,10 @@ function promptTicketConfirmation(listing) {
     if (confirmBtn) {
       confirmBtn.onclick = () => {
         modal.classList.remove("open");
-        
-        if (typeof $crisp !== 'undefined') {
-          // Unhide, open and focus the Crisp chat widget
-          $crisp.push(["do", "chat:show"]);
-          $crisp.push(["do", "chat:open"]);
-          
-          // Send pre-filled message if it's a specific product inquiry (not general-support)
-          if (listing.id !== 'general-support') {
-            const msgText = `Yo ShivaayXStore! I want to inquire about account listing: **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")} • Level: ${listing.level || 'N/A'}). Please share payment details.`;
-            $crisp.push(["do", "message:send", ["text", msgText]]);
-          }
-        } else {
-          showToast("Live Support Widget loading. Please try again...", "info");
-        }
+        createTicketFlow(listing);
       };
     }
   } else {
-    // Failsafe: if our custom modal is not present, open Crisp directly
-    if (typeof $crisp !== 'undefined') {
-      $crisp.push(["do", "chat:show"]);
-      $crisp.push(["do", "chat:open"]);
-    }
+    createTicketFlow(listing);
   }
 }
