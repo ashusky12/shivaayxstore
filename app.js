@@ -332,26 +332,16 @@ function updateHeaderActions() {
   const mobileContainer = document.getElementById("mobile-nav-actions");
   
   const html = `
-    <a href="#/tickets" class="btn btn-ghost">
-      <i data-lucide="ticket"></i> My Tickets
-    </a>
+    <button class="btn btn-ghost" onclick="$crisp.push(['do', 'chat:open'])">
+      <i data-lucide="message-square"></i> Live Support
+    </button>
   `;
   container.innerHTML = html;
   mobileContainer.innerHTML = html;
   lucide.createIcons();
 }
 
-// Handle Floating Headset Click
-document.getElementById("floating-support").addEventListener("click", () => {
-  const generalListing = {
-    id: "general-support",
-    _id: "general-support",
-    title: "General Support",
-    slug: "general-support",
-    price: 0
-  };
-  promptTicketConfirmation(generalListing);
-});
+
 
 
 // --- Router & Page Renderers ---
@@ -373,12 +363,7 @@ const routes = {
 function router() {
   const hash = window.location.hash || "#/";
   
-  // Hide/Show floating support chat bubble on Product Details views
-  const floatingSupport = document.getElementById("floating-support");
-  if (floatingSupport) {
-    const isDetailsPage = hash.startsWith("#/accounts/") && !hash.replace("#/accounts/", "").startsWith("?");
-    floatingSupport.style.display = isDetailsPage ? "none" : "flex";
-  }
+
   
   // Track scroll position when leaving Home or Browse to go to details
   const prevHash = sessionStorage.getItem("ShivaayX_prevHash") || "#/";
@@ -2455,58 +2440,14 @@ window.closeTicketConfirmModal = function() {
 };
 
 function promptTicketConfirmation(listing) {
-  const tickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
-  
-  // Find if user already has ANY active support chat thread
-  const activeTicket = tickets.find(t => t.userEmail === currentUser.email && t.status === "active");
-  
-  if (activeTicket) {
-    // If it's a product page inquiry (not general-support click), log the new product context
-    if (listing.id !== "general-support") {
-      const updateText = `🔄 Inquiring about listing: **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")})`;
-      
-      // Ensure we don't log duplicate consecutive product changes
-      const lastMsg = activeTicket.messages[activeTicket.messages.length - 1];
-      if (!lastMsg || lastMsg.text !== updateText) {
-        activeTicket.messages.push({
-          sender: "system",
-          text: `Inquiring about: ${listing.title} (Price: ₹${listing.price.toLocaleString("en-IN")})`,
-          time: new Date().toISOString(),
-          type: "success"
-        });
-        localStorage.setItem("ShivaayX_tickets", JSON.stringify(tickets));
-        
-        // POST system notification to database & forward to Discord channel
-        fetch(`${getApiUrl()}/api/tickets/${activeTicket.id}/messages`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sender: 'buyer',
-            text: `🔄 Inquiring about listing: **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")})`
-          })
-        }).catch(err => console.error(err));
-      }
-    }
+  if (typeof $crisp !== 'undefined') {
+    // Open Crisp chat box
+    $crisp.push(["do", "chat:open"]);
     
-    showToast("Opening your active support chat.");
-    window.location.hash = `#/tickets/${activeTicket.id}`;
-    return;
-  }
-
-  // Open confirmation modal if no active chat thread exists
-  const modal = document.getElementById("ticket-confirm-modal");
-  if (modal) {
-    modal.classList.add("open");
-    lucide.createIcons();
-    
-    const confirmBtn = document.getElementById("confirm-ticket-btn");
-    if (confirmBtn) {
-      confirmBtn.onclick = () => {
-        modal.classList.remove("open");
-        createTicketFlow(listing);
-      };
-    }
+    // Auto-send product inquiry message to admin
+    const msgText = `Yo ShivaayXStore! I want to inquire about account listing: **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")} • Level: ${listing.level || 'N/A'}). Please share payment details.`;
+    $crisp.push(["do", "message:send", ["text", msgText]]);
   } else {
-    createTicketFlow(listing);
+    showToast("Live Support loading. Please click again in a moment...", "info");
   }
 }
