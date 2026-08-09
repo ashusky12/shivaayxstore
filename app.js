@@ -345,7 +345,14 @@ function updateHeaderActions() {
 
 // Handle Floating Headset Click
 document.getElementById("floating-support").addEventListener("click", () => {
-  window.location.hash = "#/tickets";
+  const generalListing = {
+    id: "general-support",
+    _id: "general-support",
+    title: "General Support",
+    slug: "general-support",
+    price: 0
+  };
+  promptTicketConfirmation(generalListing);
 });
 
 
