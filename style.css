@@ -984,10 +984,10 @@ main {
     order: 1 !important;
   }
   .detail-price-section {
-    order: 2 !important; /* Pricing card sits directly below gallery on mobile */
+    display: none !important; /* Hide duplicate static price card on mobile */
   }
   .detail-info-section {
-    order: 3 !important; /* Descriptions, Video & Specs wrap below pricing */
+    order: 2 !important; /* Descriptions, Video & Specs wrap below gallery */
   }
 }
 
