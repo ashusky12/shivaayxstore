@@ -232,6 +232,10 @@ app.get('/api/tickets/user/:email', async (req, res) => {
 // 2. Fetch all messages for a ticket
 app.get('/api/tickets/:id/messages', async (req, res) => {
   try {
+    const ticketExists = await Ticket.findOne({ id: req.params.id });
+    if (!ticketExists) {
+      return res.status(404).json({ success: false, error: 'Ticket not found or deleted' });
+    }
     const messages = await TicketMessage.find({ ticketId: req.params.id }).sort({ createdAt: 1 });
     res.json({ success: true, messages });
   } catch (err) {

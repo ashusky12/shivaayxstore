@@ -1866,7 +1866,7 @@ function renderSingleTicket(ticketId) {
         const filtered = freshTickets.filter(t => t.id !== ticketId);
         localStorage.setItem("ShivaayX_tickets", JSON.stringify(filtered));
         
-        showToast("Support ticket has been closed and deleted by administrator.");
+        showToast("Ticket closed by owner");
         window.location.hash = "#/tickets";
         return;
       }
