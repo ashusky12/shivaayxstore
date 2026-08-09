@@ -210,7 +210,7 @@ bot.onText(/\/start/, (msg) => {
         chat_id: chatId,
         menu_button: {
           type: 'web_app',
-          text: 'Start',
+          text: 'START',
           web_app: { url: settings.webapp_url }
         }
       });

@@ -4,200 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ShivaayXStore Web App</title>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <style>
-    :root {
-      --bg-color: #0b0e14;
-      --card-bg: rgba(20, 24, 33, 0.7);
-      --border-color: rgba(255, 255, 255, 0.08);
-      --text-main: #ffffff;
-      --text-sub: #8c9ba5;
-      
-      /* Colors requested by user */
-      --color-green: #2ecc71;
-      --color-blue: #3498db;
-      --color-gradient: linear-gradient(135deg, #f39c12, #9b59b6);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Outfit', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 1.5rem;
-      overflow: hidden;
-    }
-
-    /* Background glow decorations */
-    .glow-bg {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(46, 204, 113, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
-      top: -50px;
-      left: -50px;
-      z-index: -1;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 2rem 1.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(10px);
-    }
-
-    .header-logo {
-      width: 60px;
-      height: 60px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem auto;
-      border: 1px solid var(--border-color);
-    }
-
-    .header-logo i {
-      color: var(--color-green);
-      font-size: 28px;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.5px;
-    }
-
-    p {
-      font-size: 0.875rem;
-      color: var(--text-sub);
-      margin-bottom: 2rem;
-    }
-
-    /* Button styles - specifically applying colors requested by the user */
-    .action-btn {
-      width: 100%;
-      padding: 1.25rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
-      transition: transform 0.2s ease, filter 0.2s ease;
-      color: #ffffff;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-
-    .btn-green {
-      background-color: var(--color-green);
-      box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
-    }
-
-    .btn-blue {
-      background-color: var(--color-blue);
-      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-    }
-
-    .btn-gradient {
-      background: var(--color-gradient);
-      box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
-    }
-
-    .action-btn:hover {
-      filter: brightness(1.1);
-      transform: translateY(-2px);
-    }
-
-    .action-btn:active {
-      transform: translateY(0);
-    }
-
-    .footer-note {
-      font-size: 0.75rem;
-      color: var(--text-sub);
-      margin-top: 1rem;
-    }
-  </style>
 </head>
-<body>
-  <div class="glow-bg"></div>
-  
-  <div class="container">
-    <div class="header-logo">
-      <i data-lucide="flame"></i>
-    </div>
-    <h1>ShivaayXStore Admin</h1>
-    <p>Select destination to publish:</p>
-
-    <!-- Green button with text "Website" on top -->
-    <button class="action-btn btn-green" onclick="sendSelection('🟩 Website')">
-      <i data-lucide="globe"></i>
-      Website
-    </button>
-
-    <!-- Blue button with text "YouTube" on top -->
-    <button class="action-btn btn-blue" onclick="sendSelection('🟦 YouTube')">
-      <i data-lucide="youtube"></i>
-      YouTube
-    </button>
-
-    <!-- Gradient button with text "Both" on top -->
-    <button class="action-btn btn-gradient" onclick="sendSelection('🟧 Both')">
-      <i data-lucide="layers"></i>
-      Both (Web & YT)
-    </button>
-
-    <div class="footer-note">
-      App will close automatically after selecting.
-    </div>
+<body style="background-color: #0b0e14; color: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; margin: 0;">
+  <div style="text-align: center;">
+    <h2>⏳ Loading...</h2>
   </div>
 
   <script>
-    // Initialize Telegram Web App SDK
+    // As soon as the Web App opens, immediately send /start and close the overlay
     if (window.Telegram && window.Telegram.WebApp) {
       window.Telegram.WebApp.ready();
-      window.Telegram.WebApp.expand(); // Make it full screen overlay
+      window.Telegram.WebApp.sendData('/start');
+    } else {
+      document.body.innerHTML = "<h2>Open inside Telegram client</h2>";
     }
-
-    function sendSelection(selectionText) {
-      if (window.Telegram && window.Telegram.WebApp) {
-        // Send selected string back to the bot
-        window.Telegram.WebApp.sendData(selectionText);
-      } else {
-        alert("Selected: " + selectionText + "\n(Run inside Telegram client to send back data)");
-      }
-    }
-
-    // Initialize Lucide Icons
-    lucide.createIcons();
   </script>
 </body>
 </html>
