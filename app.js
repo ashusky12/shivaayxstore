@@ -359,6 +359,13 @@ const routes = {
 function router() {
   const hash = window.location.hash || "#/";
   
+  // Hide/Show floating support chat bubble on Product Details views
+  const floatingSupport = document.getElementById("floating-support");
+  if (floatingSupport) {
+    const isDetailsPage = hash.startsWith("#/accounts/") && !hash.replace("#/accounts/", "").startsWith("?");
+    floatingSupport.style.display = isDetailsPage ? "none" : "flex";
+  }
+  
   // Track scroll position when leaving Home or Browse to go to details
   const prevHash = sessionStorage.getItem("ShivaayX_prevHash") || "#/";
   if ((prevHash === "#/" || prevHash.startsWith("#/accounts")) && hash.startsWith("#/accounts/")) {
