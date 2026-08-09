@@ -202,6 +202,20 @@
       <p style="font-size: 0.8125rem; color: var(--color-ink-300); margin-top: 1.25rem; text-align: center;">
         Already have an account? <a href="#/login" onclick="switchToLogin(); return false;" style="color: var(--color-blood); font-weight: 600;">Sign in</a>
       </p>
+  <!-- Ticket Confirmation Modal -->
+  <div id="ticket-confirm-modal" class="modal-overlay">
+    <div class="glass modal-box" style="max-width: 400px; text-align: center; padding: 2.25rem 2rem;">
+      <div style="width: 3.5rem; height: 3.5rem; background-color: rgba(255, 45, 70, 0.08); border: 1px dashed rgba(255, 45, 70, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">
+        <i data-lucide="help-circle" style="color: var(--color-blood); width: 2rem; height: 2rem;"></i>
+      </div>
+      <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem;">Open Support Ticket?</h3>
+      <p style="font-size: 0.875rem; color: var(--color-ink-300); margin-bottom: 1.75rem; line-height: 1.5;">
+        Kya aap sach me is account ko purchase karne ke liye live support ticket open karna chahte hain?
+      </p>
+      <div style="display: flex; gap: 0.75rem;">
+        <button class="btn btn-ghost" onclick="closeTicketConfirmModal()" style="flex: 1; border: 1px solid var(--color-surface-line); padding: 0.625rem 0; height: 42px;">Nahi, Cancel</button>
+        <button class="btn btn-primary" id="confirm-ticket-btn" style="flex: 1; padding: 0.625rem 0; height: 42px;">Haan, Open Karo</button>
+      </div>
     </div>
   </div>
 
