@@ -484,11 +484,11 @@ function renderHome() {
             <p class="stat-num">240+</p>
             <p class="stat-label">Accounts Delivered</p>
           </div>
-          <div class="stat-item" style="border-left: 1px solid var(--color-surface-line); padding-left: 2rem;">
+          <div class="stat-item">
             <p class="stat-num">4.9/5</p>
             <p class="stat-label">Buyer Rating</p>
           </div>
-          <div class="stat-item" style="border-left: 1px solid var(--color-surface-line); padding-left: 2rem;">
+          <div class="stat-item">
             <p class="stat-num">&lt;10 min</p>
             <p class="stat-label">Avg. Reply Time</p>
           </div>
@@ -506,7 +506,7 @@ function renderHome() {
       <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <div>
           <p class="eyebrow">Fresh Stock</p>
-          <h2 style="font-size: 1.75rem; margin-top: 0.25rem;">Featured Accounts</h2>
+          <h2 class="section-title">Featured Accounts</h2>
         </div>
         <a href="#/accounts" class="btn btn-ghost btn-sm">
           View All <i data-lucide="arrow-right"></i>
@@ -521,7 +521,7 @@ function renderHome() {
     <section class="shell section-py" style="border-top: 1px solid var(--color-surface-line);">
       <div style="text-align: center; margin-bottom: 3rem;">
         <p class="eyebrow">Simple Process</p>
-        <h2 style="font-size: 1.75rem; margin-top: 0.25rem;">How Buying Works</h2>
+        <h2 class="section-title">How Buying Works</h2>
         <p style="color: var(--color-ink-300); max-w: 480px; margin-inline: auto; font-size: 0.875rem; margin-top: 0.5rem;">
           Four simple steps from browsing to secure handover. Start a ticket thread directly when you find the perfect account.
         </p>
@@ -594,7 +594,7 @@ function renderAccounts(hashRoute) {
     <div class="shell section-py" style="padding-top: 2rem;">
       <header style="margin-bottom: 2rem;">
         <p class="eyebrow">Marketplace</p>
-        <h1 style="font-size: 2.25rem; margin-top: 0.25rem;">Browse Accounts</h1>
+        <h1 class="page-title">Browse Accounts</h1>
         <p style="color: var(--color-ink-300); font-size: 0.875rem; margin-top: 0.5rem;">
           Filter premium accounts by badges, weapon stats, evo gun levels, price, or rarity rankings.
         </p>
@@ -791,7 +791,7 @@ function renderAccountDetails(slug) {
   if (!listing) {
     appRoot.innerHTML = `
       <div class="shell" style="padding-top: 6rem; padding-bottom: 6rem; text-align: center;">
-        <h2 style="font-size: 2rem;">Listing not found</h2>
+        <h2 class="page-title" style="text-align: center;">Listing not found</h2>
         <p style="color: var(--color-ink-300); margin-top: 1rem;">The account you are looking for does not exist or has been deleted.</p>
         <a href="#/accounts" class="btn btn-primary" style="margin-top: 2rem;">Back to Accounts</a>
       </div>
@@ -1088,7 +1088,7 @@ function renderHowItWorks() {
     <div class="shell section-py" style="padding-top: 2rem;">
       <header style="text-align: center; max-width: 500px; margin-inline: auto; margin-bottom: 3rem;">
         <p class="eyebrow">Process</p>
-        <h1 style="font-size: 2.25rem; margin-top: 0.25rem;">How Buying Works</h1>
+        <h1 class="page-title">How Buying Works</h1>
         <p style="color: var(--color-ink-300); font-size: 0.875rem; margin-top: 0.5rem;">
           Four simple stages from browsing to account credentials delivery. Transparent, simple, safe.
         </p>
@@ -1220,7 +1220,7 @@ function renderFaq() {
     <div class="shell section-py" style="padding-top: 2rem;">
       <header style="text-align: center; max-width: 500px; margin-inline: auto; margin-bottom: 3.5rem;">
         <p class="eyebrow">Support</p>
-        <h1 style="font-size: 2.25rem; margin-top: 0.25rem;">Frequently Asked Questions</h1>
+        <h1 class="page-title">Frequently Asked Questions</h1>
         <p style="color: var(--color-ink-300); font-size: 0.875rem; margin-top: 0.5rem;">
           Straightforward answers about buying, payment security, and account secure handovers.
         </p>
@@ -1722,7 +1722,7 @@ function renderAdmin() {
     <div class="shell section-py" style="padding-top: 2rem;">
       <header style="margin-bottom: 2.5rem;">
         <p class="eyebrow">Control Panel</p>
-        <h1 style="font-size: 2.25rem; margin-top: 0.25rem;">Admin Dashboard</h1>
+        <h1 class="page-title">Admin Dashboard</h1>
         <p style="color: var(--color-ink-300); font-size: 0.875rem; margin-top: 0.5rem;">
           Directly manage, edit status, delete, and add new Free Fire ID listings to the store.
         </p>
@@ -1977,7 +1977,7 @@ function renderTerms() {
     <div class="shell section-py" style="padding-top: 2rem; max-width: 800px;">
       <header style="margin-bottom: 2rem; text-align: center;">
         <p class="eyebrow">Legal Docs</p>
-        <h1 style="font-size: 2.25rem; margin-top: 0.25rem;">Terms of Service</h1>
+        <h1 class="page-title">Terms of Service</h1>
         <p style="color: var(--color-ink-300); font-size: 0.875rem; margin-top: 0.5rem;">Last Updated: August 9, 2026</p>
       </header>
 
@@ -2018,7 +2018,7 @@ function renderPrivacy() {
     <div class="shell section-py" style="padding-top: 2rem; max-width: 800px;">
       <header style="margin-bottom: 2rem; text-align: center;">
         <p class="eyebrow">Legal Docs</p>
-        <h1 style="font-size: 2.25rem; margin-top: 0.25rem;">Privacy Policy</h1>
+        <h1 class="page-title">Privacy Policy</h1>
         <p style="color: var(--color-ink-300); font-size: 0.875rem; margin-top: 0.5rem;">Last Updated: August 9, 2026</p>
       </header>
 
@@ -2059,7 +2059,7 @@ function renderRefundPolicy() {
     <div class="shell section-py" style="padding-top: 2rem; max-width: 800px;">
       <header style="margin-bottom: 2rem; text-align: center;">
         <p class="eyebrow">Legal Docs</p>
-        <h1 style="font-size: 2.25rem; margin-top: 0.25rem;">Refund Policy</h1>
+        <h1 class="page-title">Refund Policy</h1>
         <p style="color: var(--color-ink-300); font-size: 0.875rem; margin-top: 0.5rem;">Last Updated: August 9, 2026</p>
       </header>
 
