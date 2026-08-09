@@ -198,6 +198,26 @@ function cleanAndParseJson(text) {
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
   userStates[chatId] = null;
+
+  let settings = {};
+  try {
+    settings = getYoutubeCredentials();
+  } catch(e) {}
+
+  if (settings.webapp_url) {
+    try {
+      bot.setChatMenuButton({
+        chat_id: chatId,
+        menu_button: {
+          type: 'web_app',
+          text: 'Admin Panel',
+          web_app: { url: settings.webapp_url }
+        }
+      });
+    } catch(e) {
+      console.error("Failed to set chat menu button:", e.message);
+    }
+  }
   
   const text = `🔴 <b>SHIVAAYXSTORE ADMIN</b> 🔴\n━━━━━━━━━━━━━━━\nSelect option below:`;
 
