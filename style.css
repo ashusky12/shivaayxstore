@@ -2249,22 +2249,57 @@ footer.site-footer {
 
 @media (max-width: 767px) {
   .footer-brand p {
-    max-width: 100%;
+    display: none !important; /* Hide long description on mobile */
   }
-}
-
-@media (max-width: 639px) {
+  
+  .footer-bottom p.disclaimer {
+    display: none !important; /* Hide long legal disclaimer on mobile */
+  }
+  
   footer.site-footer {
-    padding-top: 2.5rem;
-    padding-bottom: 1.5rem;
-    margin-top: 3.5rem;
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.25rem !important;
+    margin-top: 3rem !important;
+  }
+  
+  .footer-grid {
+    gap: 1.25rem !important;
+    grid-template-columns: repeat(3, 1fr) !important; /* 3 tight columns for links */
+  }
+  
+  .footer-brand {
+    grid-column: span 3 !important;
+    margin-bottom: 0.25rem !important;
+    text-align: center;
+  }
+  
+  .footer-links-col {
+    gap: 0.5rem !important;
+    text-align: center;
+  }
+  
+  .footer-links {
+    gap: 0.35rem !important;
+  }
+  
+  .footer-title {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.125rem !important;
+  }
+  
+  .footer-link-item a {
+    font-size: 0.75rem !important;
   }
   
   .footer-bottom {
+    margin-top: 1.25rem !important;
+    padding-top: 0.75rem !important;
     text-align: center;
-    align-items: center;
-    margin-top: 2rem;
-    padding-top: 1.25rem;
+    font-size: 0.6875rem !important;
+    border-top: 1px solid var(--color-surface-line);
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
   }
 }
 
