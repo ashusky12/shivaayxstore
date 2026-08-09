@@ -1824,6 +1824,17 @@ function renderSingleTicket(ticketId) {
           <a href="#/accounts/${ticket.listingSlug}" class="btn btn-ghost btn-sm">View Listing</a>
         </div>
 
+        <!-- Direct Contact Links -->
+        <div style="display: flex; gap: 0.75rem; padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--color-surface-line); align-items: center; justify-content: flex-start; flex-wrap: wrap;">
+          <span style="font-size: 0.8125rem; color: var(--color-ink-300);">Direct Contact:</span>
+          <a href="https://t.me/shivaayx9" target="_blank" style="display: flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; font-weight: 600; color: #0088cc; padding: 0.375rem 0.75rem; background: rgba(0, 136, 204, 0.08); border: 1px solid rgba(0, 136, 204, 0.2); border-radius: 8px; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(0, 136, 204, 0.15)'" onmouseout="this.style.background='rgba(0, 136, 204, 0.08)'">
+            <i data-lucide="send" style="width: 14px; height: 14px;"></i> Telegram (@shivaayx9)
+          </a>
+          <a href="https://wa.me/918969690562" target="_blank" style="display: flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; font-weight: 600; color: #25d366; padding: 0.375rem 0.75rem; background: rgba(37, 211, 102, 0.08); border: 1px solid rgba(37, 211, 102, 0.2); border-radius: 8px; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(37, 211, 102, 0.15)'" onmouseout="this.style.background='rgba(37, 211, 102, 0.08)'">
+            <i data-lucide="message-circle" style="width: 14px; height: 14px;"></i> WhatsApp
+          </a>
+        </div>
+
         <!-- Message logs -->
         <div class="chat-messages" id="chat-messages-box">
           ${chatHtml}
