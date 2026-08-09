@@ -1719,7 +1719,13 @@ function createTicketFlow(listing) {
     listingPrice: listing.price,
     status: "active",
     createdAt: new Date().toISOString(),
-    messages: [],
+    messages: [
+      {
+        sender: "bot",
+        text: "Hello! ShivaayXStore Support me aapka welcome hai. Hum jald se jald aapko reply karenge. Tab tak aap apna sawal ya details yaha share kar sakte hain!",
+        time: new Date().toISOString()
+      }
+    ],
     stage: 1
   };
 
