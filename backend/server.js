@@ -119,7 +119,7 @@ const Ticket = mongoose.model('Ticket', TicketSchema);
 const TicketMessage = mongoose.model('TicketMessage', TicketMessageSchema);
 
 // --- DISCORD CLIENT INTEGRATION ---
-const { Client, GatewayIntentBits, ChannelType, PermissionFlagsBits } = require('discord.js');
+const { Client, GatewayIntentBits, ChannelType, PermissionFlagsBits, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const DISCORD_GUILD_ID = process.env.DISCORD_GUILD_ID;
@@ -155,6 +155,37 @@ if (DISCORD_BOT_TOKEN && DISCORD_GUILD_ID) {
       }
     } catch (err) {
       console.error('Error handling channelDelete event:', err);
+    }
+  });
+
+  // Listen to Button Interactions (Close Ticket Button)
+  discordClient.on('interactionCreate', async (interaction) => {
+    if (!interaction.isButton()) return;
+    
+    if (interaction.customId.startsWith('delete_ticket_')) {
+      const ticketId = interaction.customId.replace('delete_ticket_', '');
+      try {
+        const Ticket = mongoose.model('Ticket');
+        const TicketMessage = mongoose.model('TicketMessage');
+        
+        // Acknowledge interaction
+        await interaction.reply({ content: '🗑️ Deleting ticket records and closing channel, please wait...', ephemeral: true });
+        
+        // Delete from MongoDB
+        await Ticket.deleteOne({ id: ticketId });
+        await TicketMessage.deleteMany({ ticketId });
+        
+        // Delete the channel after a short delay
+        setTimeout(async () => {
+          try {
+            await interaction.channel.delete('Ticket closed via Discord button');
+          } catch (chErr) {
+            console.error('Failed to delete channel from Discord:', chErr);
+          }
+        }, 1500);
+      } catch (err) {
+        console.error('Error closing ticket via Discord button:', err);
+      }
     }
   });
 
@@ -246,8 +277,20 @@ app.post('/api/tickets', async (req, res) => {
             ticket.discordChannelId = channel.id;
             await ticket.save();
             
-            // Post welcome message in Discord
-            await channel.send(`🚩 **NEW SUPPORT TICKET CREATED** 🚩\n\n**Buyer:** ${username} (${userEmail})\n**Item:** ${listingTitle}\n**Price:** ₹${price.toLocaleString("en-IN")}\n**Ticket ID:** \`${id}\`\n\n*Type messages in this channel to chat directly with the buyer on the website!*`);
+            // Create Delete Button
+            const deleteBtn = new ButtonBuilder()
+              .setCustomId(`delete_ticket_${id}`)
+              .setLabel('Close / Delete Ticket')
+              .setStyle(ButtonStyle.Danger)
+              .setEmoji('🗑️');
+
+            const row = new ActionRowBuilder().addComponents(deleteBtn);
+
+            // Post welcome message in Discord with the button!
+            await channel.send({
+              content: `🚩 **NEW SUPPORT TICKET CREATED** 🚩\n\n**Buyer:** ${username} (${userEmail})\n**Item:** ${listingTitle}\n**Price:** ₹${price.toLocaleString("en-IN")}\n**Ticket ID:** \`${id}\`\n\n*Type messages in this channel to chat directly with the buyer on the website!*`,
+              components: [row]
+            });
           }
         } catch (discordErr) {
           console.error('Failed to create Discord channel for ticket:', discordErr);
