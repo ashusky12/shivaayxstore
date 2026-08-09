@@ -855,7 +855,7 @@ function renderAccountDetails(slug) {
   }
 
   appRoot.innerHTML = `
-    <div class="shell section-py" style="padding-top: 2rem;">
+    <div class="shell section-py" style="padding-top: 2rem; padding-bottom: 6rem;">
       <!-- Breadcrumbs -->
       <nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--color-ink-300); margin-bottom: 1.5rem;">
         <a href="#/" style="color: var(--color-blood);">Home</a>
@@ -983,6 +983,17 @@ function renderAccountDetails(slug) {
           </section>
         </div>
       </div>
+
+      <!-- Sticky Mobile Bottom Bar -->
+      <div class="mobile-sticky-bar">
+        <div class="sticky-bar-info">
+          <span class="sticky-bar-label">Total Price</span>
+          <span class="sticky-bar-val">₹${listing.price.toLocaleString("en-IN")}</span>
+        </div>
+        <button class="btn btn-primary sticky-bar-btn" id="sticky-inquire-btn">
+          <i data-lucide="message-square"></i> Inquire Now
+        </button>
+      </div>
     </div>
   `;
   lucide.createIcons();
@@ -1047,12 +1058,15 @@ function renderAccountDetails(slug) {
   const inquireBtn = document.getElementById("inquire-btn");
   if (inquireBtn) {
     inquireBtn.addEventListener("click", () => {
-      if (!currentUser) {
-        showToast("Please register or log in to create a purchase ticket.", "error");
-        openAuthModal("login-modal");
-      } else {
-        createTicketFlow(listing);
-      }
+      createTicketFlow(listing);
+    });
+  }
+
+  // Sticky Bottom Bar Inquiry trigger
+  const stickyInquireBtn = document.getElementById("sticky-inquire-btn");
+  if (stickyInquireBtn) {
+    stickyInquireBtn.addEventListener("click", () => {
+      createTicketFlow(listing);
     });
   }
 }
