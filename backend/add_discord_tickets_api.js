@@ -1,90 +1,26 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
 
-const app = express();
-app.use(express.json());
-app.use(cors());
+const serverPath = path.join(__dirname, '..', 'backend', 'server.js');
+let serverContent = fs.readFileSync(serverPath, 'utf8');
 
-const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  console.error("FATAL ERROR: MONGODB_URI is not defined in environment variables!");
-  process.exit(1);
-}
-
-// Connect to MongoDB
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('Successfully connected to MongoDB Central Database.'))
-  .catch(err => console.error('MongoDB connection failure:', err));
-
-// Listings Schema
-const ListingSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  slug: { type: String, required: true, unique: true },
-  description: { type: String, required: true },
-  price: { type: Number, required: true },
-  level: { type: Number, required: true },
-  rarity: { type: String, default: 'mythic' },
-  status: { type: String, default: 'available' }, // available, reserved, sold
-  boundType: { type: String, default: 'google' },
-  badges: { type: Number, default: 0 },
-  likes: { type: Number, default: 0 },
-  elitePasses: { type: Number, default: 0 },
-  evoGuns: { type: Number, default: 0 },
-  accountAgeYears: { type: Number, default: 4 },
-  primeLevel: { type: Number, default: 5 },
-  videoUrl: { type: String, default: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
-  rareItems: [String],
-  images: [String],
-  views: { type: Number, default: 10 },
-  createdAt: { type: Date, default: Date.now }
-});
-
-const Listing = mongoose.model('Listing', ListingSchema);
-
-// REST API Routes
-// 1. Fetch all listings
-app.get('/api/listings', async (req, res) => {
+// The replacement target block at the end of server.js
+const targetCode = `// 4. Delete listing
+app.delete('/api/listings/:id', async (req, res) => {
   try {
-    const listings = await Listing.find().sort({ createdAt: -1 });
-    res.json(listings);
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
-// 2. Add a new listing (used by the Telegram Bot)
-app.post('/api/listings', async (req, res) => {
-  try {
-    const { title, slug } = req.body;
-    const existing = await Listing.findOne({ slug });
-    if (existing) {
-      return res.status(400).json({ success: false, error: 'Listing slug conflict: Title already exists.' });
-    }
-
-    const listing = new Listing(req.body);
-    await listing.save();
-    res.status(201).json({ success: true, listing });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
-// 3. Update status or price
-app.patch('/api/listings/:id', async (req, res) => {
-  try {
-    const listing = await Listing.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const listing = await Listing.findByIdAndDelete(req.params.id);
     if (!listing) return res.status(404).json({ success: false, error: 'Listing not found.' });
-    res.json({ success: true, listing });
+    res.json({ success: true, message: 'Listing deleted successfully.' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// 4. Delete listing
+app.listen(PORT, () => {
+  console.log(\`ShivaayXStore API Server running on port \${PORT}\`);
+});`;
+
+const replacementCode = `// 4. Delete listing
 app.delete('/api/listings/:id', async (req, res) => {
   try {
     const listing = await Listing.findByIdAndDelete(req.params.id);
@@ -137,7 +73,7 @@ if (DISCORD_BOT_TOKEN && DISCORD_GUILD_ID) {
   });
 
   discordClient.on('ready', () => {
-    console.log(`Discord Support Bot logged in as ${discordClient.user.tag}`);
+    console.log(\`Discord Support Bot logged in as \${discordClient.user.tag}\`);
   });
 
   discordClient.on('messageCreate', async (message) => {
@@ -154,7 +90,7 @@ if (DISCORD_BOT_TOKEN && DISCORD_GUILD_ID) {
           text: message.content
         });
         await ticketMessage.save();
-        console.log(`Synced admin message from Discord channel ${message.channel.name}: ${message.content}`);
+        console.log(\`Synced admin message from Discord channel \${message.channel.name}: \${message.content}\`);
       }
     } catch (err) {
       console.error('Error syncing message from Discord:', err);
@@ -205,7 +141,7 @@ app.post('/api/tickets', async (req, res) => {
         try {
           const guild = await discordClient.guilds.fetch(DISCORD_GUILD_ID);
           if (guild) {
-            const channelName = `ticket-${username.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}-${listingId.substring(0, 10)}`;
+            const channelName = \`ticket-\${username.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}-\${listingId.substring(0, 10)}\`;
             const createOptions = {
               name: channelName,
               type: ChannelType.GuildText
@@ -219,7 +155,7 @@ app.post('/api/tickets', async (req, res) => {
             await ticket.save();
             
             // Post welcome message in Discord
-            await channel.send(`🚩 **NEW SUPPORT TICKET CREATED** 🚩\n\n**Buyer:** ${username} (${userEmail})\n**Item:** ${listingTitle}\n**Price:** ₹${price.toLocaleString("en-IN")}\n**Ticket ID:** \`${id}\`\n\n*Type messages in this channel to chat directly with the buyer on the website!*`);
+            await channel.send(\`🚩 **NEW SUPPORT TICKET CREATED** 🚩\\n\\n**Buyer:** \${username} (\${userEmail})\\n**Item:** \${listingTitle}\\n**Price:** ₹\${price.toLocaleString("en-IN")}\\n**Ticket ID:** \\\`\${id}\\\`\\n\\n*Type messages in this channel to chat directly with the buyer on the website!*\`);
           }
         } catch (discordErr) {
           console.error('Failed to create Discord channel for ticket:', discordErr);
@@ -247,7 +183,7 @@ app.post('/api/tickets/:id/messages', async (req, res) => {
         try {
           const channel = await discordClient.channels.fetch(ticket.discordChannelId);
           if (channel) {
-            await channel.send(`💬 **Buyer (${ticket.username}):** ${text}`);
+            await channel.send(\`💬 **Buyer (\${ticket.username}):** \${text}\`);
           }
         } catch (discordErr) {
           console.error('Failed to forward message to Discord:', discordErr);
@@ -262,5 +198,14 @@ app.post('/api/tickets/:id/messages', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`ShivaayXStore API Server running on port ${PORT}`);
-});
+  console.log(\`ShivaayXStore API Server running on port \${PORT}\`);
+});`;
+
+if (serverContent.includes(targetCode)) {
+  serverContent = serverContent.replace(targetCode, replacementCode);
+  console.log("Successfully overhauled backend/server.js with Discord support!");
+} else {
+  console.log("WARNING: Target code block not matched inside server.js!");
+}
+
+fs.writeFileSync(serverPath, serverContent, 'utf8');
