@@ -2386,6 +2386,51 @@ footer.site-footer {
   }
 }
 
+/* Responsive Filter Dashboard Bar for Mobile (Deep Optimization) */
+@media (max-width: 639px) {
+  .filter-bar {
+    padding: 1rem !important;
+    margin-bottom: 1.5rem !important;
+    border-radius: 0.75rem !important;
+  }
+  
+  .filter-row {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+  
+  /* Search input spans full width */
+  .filter-row .filter-group:nth-child(1) {
+    grid-column: span 2 !important;
+    min-width: 0 !important;
+  }
+  
+  /* Rarity Tier & Availability side-by-side in grid */
+  .filter-row .filter-group:nth-child(2),
+  .filter-row .filter-group:nth-child(3) {
+    grid-column: span 1 !important;
+    min-width: 0 !important;
+  }
+  
+  /* Sort By spans full width */
+  .filter-row .filter-group:nth-child(4) {
+    grid-column: span 2 !important;
+    min-width: 0 !important;
+  }
+  
+  .filter-label {
+    font-size: 0.625rem !important;
+    letter-spacing: 0.03em !important;
+  }
+  
+  .form-control {
+    font-size: 0.8125rem !important;
+    padding: 0.45rem 0.625rem !important;
+    height: 38px !important;
+  }
+}
+
 
 
 
