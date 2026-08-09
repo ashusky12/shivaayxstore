@@ -475,7 +475,7 @@ function renderHome() {
     </section>
 
     <!-- Featured Stock -->
-    <section class="shell section-py" style="border-top: 1px solid var(--color-surface-line);">
+    <section class="shell section-py featured-section" style="border-top: 1px solid var(--color-surface-line);">
       <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
         <div>
           <p class="eyebrow">Fresh Stock</p>

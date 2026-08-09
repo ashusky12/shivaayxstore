@@ -2323,6 +2323,69 @@ footer.site-footer {
   }
 }
 
+/* Home Page spacing optimization to bring Featured Accounts higher */
+.hero-section.section-py {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.hero-title {
+  margin-top: 1rem !important;
+}
+
+.hero-desc {
+  margin-top: 0.75rem !important;
+}
+
+.hero-actions {
+  margin-top: 1.25rem !important;
+}
+
+.hero-stats {
+  margin-top: 1.75rem !important;
+}
+
+.hero-checks {
+  margin-top: 1.25rem !important;
+}
+
+.featured-section {
+  padding-top: 1.5rem !important;
+  padding-bottom: 2rem !important;
+}
+
+@media (min-width: 640px) {
+  .hero-section.section-py {
+    padding-top: 3rem !important;
+    padding-bottom: 1.75rem !important;
+  }
+  
+  .hero-title {
+    margin-top: 1.25rem !important;
+  }
+
+  .hero-desc {
+    margin-top: 0.875rem !important;
+  }
+
+  .hero-actions {
+    margin-top: 1.5rem !important;
+  }
+
+  .hero-stats {
+    margin-top: 2rem !important;
+  }
+
+  .hero-checks {
+    margin-top: 1.5rem !important;
+  }
+
+  .featured-section {
+    padding-top: 2rem !important;
+    padding-bottom: 3rem !important;
+  }
+}
+
 
 
 
