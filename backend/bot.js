@@ -195,35 +195,18 @@ function cleanAndParseJson(text) {
   return JSON.parse(cleaned);
 }
 
-// Help / Start Command (Renders persistent bottom menu grid with Web App if configured)
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
   userStates[chatId] = null;
-
-  let settings = {};
-  try {
-    settings = getYoutubeCredentials();
-  } catch(e) {}
-
-  const webappUrl = settings.webapp_url;
   
-  const text = `🔴 <b>SHIVAAYXSTORE ADMIN</b> 🔴\n━━━━━━━━━━━━━━━\nSelect option below:` + 
-    (!webappUrl ? `\n\n💡 <b>Tip</b>: Type <code>/setapp [your_https_tunnel_url]/tgapp.html</code> to link custom colored buttons!` : '');
-
-  const row1 = webappUrl 
-    ? [{ text: "📱 Open Green Admin App", web_app: { url: webappUrl } }]
-    : [{ text: "🟩 Website" }, { text: "🟦 YouTube" }];
-
-  const row2 = webappUrl
-    ? [{ text: "🟨 Stock" }, { text: "🟪 Stats" }]
-    : [{ text: "🟧 Both" }, { text: "🟨 Stock" }];
-
-  const row3 = webappUrl
-    ? [{ text: "🟥 Refresh" }]
-    : [{ text: "🟪 Stats" }, { text: "🟥 Refresh" }];
+  const text = `🔴 <b>SHIVAAYXSTORE ADMIN</b> 🔴\n━━━━━━━━━━━━━━━\nSelect option below:`;
 
   const keyboardMarkup = {
-    keyboard: [row1, row2, row3],
+    keyboard: [
+      [{ text: "🟩 Website" }, { text: "🟦 YouTube" }],
+      [{ text: "🟧 Both" }, { text: "🟨 Stock" }],
+      [{ text: "🟪 Stats" }, { text: "🟥 Refresh" }]
+    ],
     resize_keyboard: true,
     one_time_keyboard: false
   };
