@@ -1719,14 +1719,8 @@ function createTicketFlow(listing) {
     listingPrice: listing.price,
     status: "active",
     createdAt: new Date().toISOString(),
-    messages: [
-      {
-        sender: "bot",
-        text: `Yo ${currentUser.username}! ShivaayXStore me aapka welcome hai. Aapne **${listing.title}** (Price: ₹${listing.price.toLocaleString("en-IN")}) ke liye ticket open kiya hai.\n\nKya aap is ID ko lock karke payment details lena chahte hain?`,
-        time: new Date().toISOString()
-      }
-    ],
-    stage: 1 // Stage 1: Negotiating/Greet
+    messages: [],
+    stage: 1
   };
 
   tickets.push(newTicket);
@@ -1791,27 +1785,14 @@ function renderSingleTicket(ticketId) {
     }
   });
 
-  // Render input panel based on stage
+  // Render input panel
   let inputBarHtml = "";
   if (ticket.status === "closed") {
     inputBarHtml = `
       <p style="text-align: center; font-size: 0.8125rem; color: var(--color-ink-400);">This ticket has been resolved and is closed.</p>
     `;
   } else {
-    // Stage-based action shortcuts
-    let shortcutHtml = "";
-    if (ticket.stage === 1) {
-      shortcutHtml = `<button type="button" class="btn btn-ghost btn-sm" id="btn-agree-buy">Ha bhai, ID lock karke payment details do</button>`;
-    } else if (ticket.stage === 2) {
-      shortcutHtml = `<button type="button" class="btn btn-primary btn-sm" id="btn-simulate-pay"><i data-lucide="credit-card"></i> Simulate Payment (UPI ₹${ticket.listingPrice.toLocaleString("en-IN")})</button>`;
-    } else if (ticket.stage === 3) {
-      shortcutHtml = `<button type="button" class="btn btn-ghost btn-sm" id="btn-request-logins">Handover login details de do</button>`;
-    }
-
     inputBarHtml = `
-      <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
-        ${shortcutHtml}
-      </div>
       <form class="chat-form" id="chat-input-form">
         <input type="text" class="form-control" placeholder="Type a message..." id="chat-input" required autocomplete="off">
         <button type="submit" class="btn btn-primary"><i data-lucide="send"></i></button>
@@ -1832,7 +1813,7 @@ function renderSingleTicket(ticketId) {
         <div class="chat-header">
           <div class="chat-title-wrapper">
             <h2 style="font-size: 1.125rem;">Purchase: ${ticket.listingTitle}</h2>
-            <span class="chat-status">Status: active • Deal Stage: ${ticket.stage === 4 ? "Completed" : "In Progress"}</span>
+            <span class="chat-status">Status: active</span>
           </div>
           <a href="#/accounts/${ticket.listingSlug}" class="btn btn-ghost btn-sm">View Listing</a>
         </div>
@@ -1951,29 +1932,6 @@ function renderSingleTicket(ticketId) {
     });
   }
 
-  // Action shortcuts
-  const btnAgree = document.getElementById("btn-agree-buy");
-  if (btnAgree) {
-    btnAgree.addEventListener("click", () => {
-      sendUserMessage("I want to proceed and purchase this account, lock the listing.");
-    });
-  }
-
-  const btnPay = document.getElementById("btn-simulate-pay");
-  if (btnPay) {
-    btnPay.addEventListener("click", () => {
-      sendUserMessage("Simulating payment of ₹" + ticket.listingPrice + " now...");
-      simulatePaymentTrigger();
-    });
-  }
-
-  const btnLogins = document.getElementById("btn-request-logins");
-  if (btnLogins) {
-    btnLogins.addEventListener("click", () => {
-      sendUserMessage("Please send the handover logins and security recovery details.");
-    });
-  }
-
   // Send message helper
   function sendUserMessage(text) {
     const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
@@ -1998,101 +1956,7 @@ function renderSingleTicket(ticketId) {
       })
     }).catch(err => console.error("Discord message sync error:", err));
     
-    // Trigger simulated reply delay
-    setTimeout(() => {
-      simulateBotReply(text);
-    }, 1200);
-  }
 
-  // Simulated Chatbot Support Team logic
-  function simulateBotReply(userText) {
-    const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
-    const currentTicket = freshTickets.find(t => t.id === ticketId);
-    
-    let botReply = "";
-    let systemAlert = null;
-    let nextStage = currentTicket.stage;
-    
-    const lowercaseText = userText.toLowerCase();
-
-    if (currentTicket.stage === 1) {
-      if (lowercaseText.includes("yes") || lowercaseText.includes("proceed") || lowercaseText.includes("purchase") || lowercaseText.includes("lock")) {
-        nextStage = 2;
-        botReply = `Bhai, aapki ID reserve ho chuki hai! Catalog me isko **Reserved** mark kar diya hai.\n\n**Payment Details (₹${currentTicket.listingPrice.toLocaleString("en-IN")}):**\n- **UPI ID**: \`ShivaayXStore@upi\`\n\nPayment complete hone ke baad yaha screenshot bhej dijiye ya niche simulated payment button par click karein!`;
-        systemAlert = {
-          sender: "system",
-          text: `Listing ${currentTicket.listingTitle} status set to RESERVED`,
-          type: "lock"
-        };
-        
-        // Update listing status locally
-        const listings = getListings();
-        const listingToUpdate = listings.find(l => l.id === currentTicket.listingId);
-        if (listingToUpdate) {
-          listingToUpdate.status = "reserved";
-          saveListings(listings);
-        }
-      } else {
-        botReply = "Thik hai bhai. Agar badges, Evo guns ya kisi chiz ka doubt ho toh pooch lena. Jab ready ho toh bata dena!";
-      }
-    } else if (currentTicket.stage === 2) {
-      if (lowercaseText.includes("paid") || lowercaseText.includes("simulating") || lowercaseText.includes("confirm")) {
-        // Handled directly by simulatePaymentTrigger usually, but added fallback
-        nextStage = 3;
-        botReply = "Ledger check kar liya hai... Payment receive ho gayi hai bhai! Handover credentials ready ho rahi hain. Login details lene ke liye niche button par click karein ya 'Logins' type karein.";
-        systemAlert = {
-          sender: "system",
-          text: "Payment of ₹" + currentTicket.listingPrice.toLocaleString("en-IN") + " confirmed successfully via UPI ledger",
-          type: "success"
-        };
-      } else {
-        botReply = "Awaiting verification. Payment complete karke message kijiye. ID bas 2 ghante tak reserved rahegi.";
-      }
-    } else if (currentTicket.stage === 3) {
-      if (lowercaseText.includes("login") || lowercaseText.includes("handover") || lowercaseText.includes("detail") || lowercaseText.includes("credential")) {
-        nextStage = 4;
-        botReply = `Ye lijiye aapki secure login details:\n\n- **Google Login**: \`ShivaayX_player_${Math.floor(1000 + Math.random() * 9000)}@gmail.com\`\n- **Password**: \`bx_pass_${Math.floor(100000 + Math.random() * 900000)}\`\n- **Recovery Email**: \`ShivaayX_backup@gmail.com\`\n\n**Bohut important instructions**:\n1. ID ko device me login karein.\n2. Google security settings me recovery details ko change kar lein.\n3. Two-factor authentication (2FA) ON kar lein.\n\nShivaayXStore se shopping karne ke liye thank you! Ye ticket ab close ho gayi hai.`;
-        systemAlert = {
-          sender: "system",
-          text: "Handover credentials shared. Account status updated to SOLD.",
-          type: "success"
-        };
-        
-        // Update listing status locally to sold
-        const listings = getListings();
-        const listingToUpdate = listings.find(l => l.id === currentTicket.listingId);
-        if (listingToUpdate) {
-          listingToUpdate.status = "sold";
-          saveListings(listings);
-        }
-        
-        currentTicket.status = "closed";
-      } else {
-        botReply = "Account ready hai handover ke liye. Credentials lene ke liye 'logins' type kijiye.";
-      }
-    } else {
-      botReply = "Ye deal complete ho chuki hai bhai! Agar koi doosri ID pasand aaye toh naya ticket open kar lena.";
-    }
-
-    // Push replies to ticket log
-    if (systemAlert) {
-      currentTicket.messages.push(systemAlert);
-    }
-    currentTicket.messages.push({
-      sender: "bot",
-      text: botReply,
-      time: new Date().toISOString()
-    });
-    currentTicket.stage = nextStage;
-
-    // Save changes and re-render single chat
-    localStorage.setItem("ShivaayX_tickets", JSON.stringify(freshTickets));
-    renderSingleTicket(ticketId);
-    
-    // Show toast for updates
-    if (systemAlert) {
-      showToast(systemAlert.text, systemAlert.type);
-    }
   }
 
   // Simulate payment button shortcut logic
