@@ -207,13 +207,13 @@ bot.onText(/\/start/, (msg) => {
   if (settings.webapp_url) {
     try {
       const cleanUrl = settings.webapp_url.split('?')[0];
-      const cacheBustedUrl = `${cleanUrl}?v=${Date.now()}`;
+      const mainWebsiteUrl = cleanUrl.replace('/tgapp.html', '') || 'https://shivaayxstore-1mkjdrpjg-immadhukarsarkar-5758s-projects.vercel.app/';
       bot.setChatMenuButton({
         chat_id: chatId,
         menu_button: {
           type: 'web_app',
-          text: 'START',
-          web_app: { url: cacheBustedUrl }
+          text: 'VISIT',
+          web_app: { url: mainWebsiteUrl }
         }
       });
     } catch(e) {
