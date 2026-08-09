@@ -1672,12 +1672,7 @@ function renderTickets() {
           <p class="eyebrow">Dashboard</p>
           <h1 style="font-size: 2rem; margin-top: 0.25rem;">My Support Tickets</h1>
         </div>
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
-          <button class="btn btn-ghost btn-sm" id="btn-reset-all-tickets" style="color: var(--color-blood); border: 1px dashed rgba(255, 45, 70, 0.3);">
-            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i> Reset All
-          </button>
-          <a href="#/accounts" class="btn btn-ghost btn-sm"><i data-lucide="plus"></i> New Ticket</a>
-        </div>
+        <a href="#/accounts" class="btn btn-ghost btn-sm"><i data-lucide="plus"></i> New Ticket</a>
       </header>
 
       ${ticketListHtml}
@@ -1685,21 +1680,7 @@ function renderTickets() {
   `;
   lucide.createIcons();
 
-  const resetBtn = document.getElementById("btn-reset-all-tickets");
-  if (resetBtn) {
-    resetBtn.addEventListener("click", async () => {
-      if (confirm("Kya aap sach me saare purane tickets aur channels delete karna chahte hain?")) {
-        localStorage.setItem("ShivaayX_tickets", JSON.stringify([]));
-        try {
-          await fetch(`${getApiUrl()}/api/tickets/all`, { method: 'DELETE' });
-        } catch (err) {
-          console.error(err);
-        }
-        showToast("Saare tickets successfully clear ho gaye hain.");
-        router();
-      }
-    });
-  }
+
 }
 
 // 8. TICKET CREATION LOGIC
@@ -1827,12 +1808,7 @@ function renderSingleTicket(ticketId) {
             <h2 style="font-size: 1.125rem;">Purchase: ${ticket.listingTitle}</h2>
             <span class="chat-status">Status: active</span>
           </div>
-          <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <a href="#/accounts/${ticket.listingSlug}" class="btn btn-ghost btn-sm">View Listing</a>
-            <button class="btn btn-ghost btn-sm" id="btn-delete-this-ticket" style="color: var(--color-blood);" title="Delete support ticket">
-              <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
-            </button>
-          </div>
+          <a href="#/accounts/${ticket.listingSlug}" class="btn btn-ghost btn-sm">View Listing</a>
         </div>
 
         <!-- Direct Contact Links -->
@@ -1869,33 +1845,7 @@ function renderSingleTicket(ticketId) {
     clearInterval(window.ShivaayX_chatPollInterval);
   }
 
-  // Delete current ticket click listener
-  const deleteThisBtn = document.getElementById("btn-delete-this-ticket");
-  if (deleteThisBtn) {
-    deleteThisBtn.addEventListener("click", async () => {
-      if (confirm("Kya aap sach me is support ticket ko delete karna chahte hain? (Isse Discord channel bhi delete ho jayega)")) {
-        // Clear polling
-        if (window.ShivaayX_chatPollInterval) {
-          clearInterval(window.ShivaayX_chatPollInterval);
-        }
-        
-        // Delete locally
-        const freshTickets = JSON.parse(localStorage.getItem("ShivaayX_tickets") || "[]");
-        const filtered = freshTickets.filter(t => t.id !== ticketId);
-        localStorage.setItem("ShivaayX_tickets", JSON.stringify(filtered));
-        
-        // Delete from backend server
-        try {
-          await fetch(`${getApiUrl()}/api/tickets/${ticketId}`, { method: 'DELETE' });
-        } catch (err) {
-          console.error(err);
-        }
-        
-        showToast("Ticket deleted successfully.");
-        window.location.hash = "#/tickets";
-      }
-    });
-  }
+
 
   // Poll backend database for Discord Admin messages every 3 seconds
   window.ShivaayX_chatPollInterval = setInterval(async () => {
