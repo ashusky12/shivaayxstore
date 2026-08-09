@@ -357,6 +357,7 @@ const routes = {
 };
 
 function router() {
+  window.scrollTo(0, 0);
   const hash = window.location.hash || "#/";
   
   // Highlight navigation link
