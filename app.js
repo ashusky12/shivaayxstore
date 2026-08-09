@@ -2533,7 +2533,7 @@ function renderRefundPolicy() {
 // --- TICKET CONFIRMATION MODAL LOGIC ---
 window.closeTicketConfirmModal = function() {
   const modal = document.getElementById("ticket-confirm-modal");
-  if (modal) modal.classList.remove("active");
+  if (modal) modal.classList.remove("open");
 };
 
 function promptTicketConfirmation(listing) {
@@ -2549,7 +2549,7 @@ function promptTicketConfirmation(listing) {
   // Open confirmation modal
   const modal = document.getElementById("ticket-confirm-modal");
   if (modal) {
-    modal.classList.add("active");
+    modal.classList.add("open");
     
     // Bind Lucide icons for the modal
     lucide.createIcons();
@@ -2557,7 +2557,7 @@ function promptTicketConfirmation(listing) {
     const confirmBtn = document.getElementById("confirm-ticket-btn");
     if (confirmBtn) {
       confirmBtn.onclick = () => {
-        modal.classList.remove("active");
+        modal.classList.remove("open");
         createTicketFlow(listing);
       };
     }
