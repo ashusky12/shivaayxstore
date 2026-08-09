@@ -815,6 +815,24 @@ function renderAccountDetails(slug) {
     `;
   });
 
+  // Filter other available listings of similar tier/rarity
+  const similarListings = listings.filter(l => l.id !== listing.id && l.status === "available");
+  
+  // Sort them so that listings with the same rarity rank higher
+  similarListings.sort((a, b) => {
+    if (a.rarity === listing.rarity && b.rarity !== listing.rarity) return -1;
+    if (b.rarity === listing.rarity && a.rarity !== listing.rarity) return 1;
+    return 0;
+  });
+  
+  // Take top 3 listings
+  const recommendedListings = similarListings.slice(0, 3);
+  
+  let similarListingsHtml = "";
+  recommendedListings.forEach(l => {
+    similarListingsHtml += renderListingCardMarkup(l);
+  });
+
   // Side bar buy actions card
   let buyActionsHtml = "";
   if (listing.status === "sold") {
@@ -984,6 +1002,19 @@ function renderAccountDetails(slug) {
           </section>
         </div>
       </div>
+
+      </div>
+
+      <!-- Similar Tier Recommendations -->
+      <section style="margin-top: 3.5rem; border-top: 1px solid var(--color-surface-line); padding-top: 2.5rem; margin-bottom: 2rem;">
+        <div style="margin-bottom: 1.5rem;">
+          <p class="eyebrow" style="color: var(--color-blood); font-weight: bold; text-transform: uppercase;">Similar Tier</p>
+          <h2 class="section-title" style="margin-top: 0.125rem;">You may also like</h2>
+        </div>
+        <div class="listings-grid">
+          ${similarListingsHtml}
+        </div>
+      </section>
 
       <!-- Sticky Mobile Bottom Bar -->
       <div class="mobile-sticky-bar">
